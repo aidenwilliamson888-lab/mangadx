@@ -707,110 +707,100 @@
         document.getElementById('totalManga').textContent = data.length;
     }
 
-    // ============================================================
-    // FETCH MANGA VIA WORKER
-    // ============================================================
-    async function fetchManga(query = '', offset = 0, genre = '') {
-        const grid = document.getElementById('mangaGrid');
-        grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>`;
+    // ====== FETCH MANGA VIA WORKER ======
+async function fetchManga(query = '', offset = 0, genre = '') {
+    const grid = document.getElementById('mangaGrid');
+    grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>`;
 
-        try {
-            // ====== BUILD PARAMETERS ======
-            const params = new URLSearchParams();
-            params.append('limit', LIMIT.toString());
-            params.append('offset', offset.toString());
-            
-            // 🔥 FIX: includes HARUS array (pake [] untuk setiap value)
-            params.append('includes[]', 'cover_art');
-            params.append('includes[]', 'author');
-            
-            params.append('order[latestUploadedChapter]', 'desc');
-            
-            // Content rating
-            ['safe', 'suggestive', 'erotica'].forEach(r => params.append('contentRating[]', r));
-            
-            // Language
-            params.append('availableTranslatedLanguage[]', 'en');
+    try {
+        // ====== BUILD PARAMETERS ======
+        const params = new URLSearchParams();
+        params.append('limit', LIMIT.toString());
+        params.append('offset', offset.toString());
+        params.append('includes[]', 'cover_art');
+        params.append('includes[]', 'author');
+        params.append('order[latestUploadedChapter]', 'desc');
+        
+        // Content rating
+        ['safe', 'suggestive', 'erotica'].forEach(r => params.append('contentRating[]', r));
+        params.append('availableTranslatedLanguage[]', 'en');
 
-            if (query && query.trim()) {
-                params.append('title', query.trim());
-            }
+        if (query && query.trim()) {
+            params.append('title', query.trim());
+        }
 
-            // Genre filter
-            if (genre) {
-                const genreMap = {
-                    'shounen': '0e159c0a-1c3a-4e87-9b78-d3c5b3e5f9b2',
-                    'shoujo': 'b5a841c2-e71c-44f4-868c-1a2e9b6f7a3c',
-                    'seinen': '1f1b6b4f-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
-                    'isekai': 'a7f2c8b1-9e4d-4f5e-9b8a-7c3d5e9f1b2a',
-                    'comedy': '4d32cc48-9f00-4e8a-8c9a-1e3f5b7d9a1c',
-                    'romance': '423e2eae-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
-                    'fantasy': 'cdc7a9f7-3b5a-4e9f-8b3a-9e6f5b3a7c1e'
-                };
-                const tagId = genreMap[genre.toLowerCase()];
-                if (tagId) params.append('includedTags[]', tagId);
-            }
+        // Genre filter
+        if (genre) {
+            const genreMap = {
+                'shounen': '0e159c0a-1c3a-4e87-9b78-d3c5b3e5f9b2',
+                'shoujo': 'b5a841c2-e71c-44f4-868c-1a2e9b6f7a3c',
+                'seinen': '1f1b6b4f-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
+                'isekai': 'a7f2c8b1-9e4d-4f5e-9b8a-7c3d5e9f1b2a',
+                'comedy': '4d32cc48-9f00-4e8a-8c9a-1e3f5b7d9a1c',
+                'romance': '423e2eae-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
+                'fantasy': 'cdc7a9f7-3b5a-4e9f-8b3a-9e6f5b3a7c1e'
+            };
+            const tagId = genreMap[genre.toLowerCase()];
+            if (tagId) params.append('includedTags[]', tagId);
+        }
 
-            // ====== PAKE WORKER ======
-            // Format: WORKER_URL / https://api.mangadex.org/endpoint?params
-            const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga?${params.toString()}`)}`;
-            console.log('🔍 Fetching via Worker:', targetUrl);
+        // ====== PAKE WORKER DENGAN FORMAT YANG BENAR ======
+        // 🔥 GABUNGIN WORKER_URL + TARGET_URL
+        const targetUrl = `${WORKER_URL}/https://api.mangadex.org/manga?${params.toString()}`;
+        console.log('🔍 Fetching via Worker:', targetUrl);
 
-            const response = await fetch(targetUrl);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('❌ Response error:', response.status, errorText);
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
+        const response = await fetch(targetUrl);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Response error:', response.status, errorText);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
 
-            const result = await response.json();
-            console.log('✅ Data received:', result);
+        const result = await response.json();
+        console.log('✅ Data received:', result);
 
-            // Cek error dari MangaDex
-            if (result.errors) {
-                console.error('❌ MangaDex errors:', result.errors);
-                throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
-            }
+        // Cek error dari MangaDex
+        if (result.errors) {
+            console.error('❌ MangaDex errors:', result.errors);
+            throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
+        }
 
-            // Filter manga yang punya cover
-            const validData = (result.data || []).filter(m => 
-                m.relationships && m.relationships.some(r => r.type === 'cover_art')
-            );
+        // Filter manga yang punya cover
+        const validData = (result.data || []).filter(m => 
+            m.relationships && m.relationships.some(r => r.type === 'cover_art')
+        );
 
-            // Store total untuk pagination
-            totalData = result.total || validData.length || 0;
+        totalData = result.total || validData.length || 0;
 
-            if (validData.length === 0) {
-                grid.innerHTML = `
-                    <div class="loading" style="grid-column:1/-1;">
-                        <p style="color:#888; font-size:18px;">😕 No manga found</p>
-                        <p style="color:#666; font-size:14px; margin-top:6px;">Try different keywords or reset filters</p>
-                        <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
-                    </div>
-                `;
-                updatePagination(offset);
-                return;
-            }
-
-            renderManga(validData);
-            updatePagination(offset);
-
-        } catch (error) {
-            console.error('❌ Fetch error:', error);
+        if (validData.length === 0) {
             grid.innerHTML = `
                 <div class="loading" style="grid-column:1/-1;">
-                    <p style="color:#e94560; font-size:18px;">❌ Failed to load data</p>
-                    <p style="color:#666; font-size:14px; margin-top:6px;">${error.message}</p>
-                    <p style="color:#555; font-size:13px; margin-top:4px;">Check console for details.</p>
-                    <button onclick="fetchManga('${query}', 0, '${genre}')" 
-                            style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">
-                        🔄 Try Again
-                    </button>
+                    <p style="color:#888; font-size:18px;">😕 No manga found</p>
+                    <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
                 </div>
             `;
+            updatePagination(offset);
+            return;
         }
+
+        renderManga(validData);
+        updatePagination(offset);
+
+    } catch (error) {
+        console.error('❌ Fetch error:', error);
+        grid.innerHTML = `
+            <div class="loading" style="grid-column:1/-1;">
+                <p style="color:#e94560; font-size:18px;">❌ Failed to load data</p>
+                <p style="color:#666; font-size:14px; margin-top:6px;">${error.message}</p>
+                <p style="color:#555; font-size:13px; margin-top:4px;">Check console for details.</p>
+                <button onclick="fetchManga('${query}', 0, '${genre}')" 
+                        style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">
+                    🔄 Try Again
+                </button>
+            </div>
+        `;
     }
+}
 
     // ============================================================
     // PAGINATION
