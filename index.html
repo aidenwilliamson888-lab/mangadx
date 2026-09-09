@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MangaReader - Read Manga Online Free</title>
     
-    <!-- ============================================================
-         META FOR SEO & SHARING
-         ============================================================ -->
-    <meta name="description" content="Read manga online for free from MangaDex. Complete collection of latest and most popular manga.">
+    <meta name="description" content="Read manga online for free from MangaDx. Complete collection of latest and most popular manga.">
     <meta name="keywords" content="read manga, manga online, free manga, comic online, MangaDex">
+    <meta property="og:description" content="Read manga online for free from MangaDx. Complete collection of latest and most popular manga.">
     <meta property="og:title" content="MangaReader - Read Manga Online Free">
-    <meta property="og:description" content="Read manga online for free from MangaDex. Complete collection of latest and most popular manga.">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
 
-    <!-- ============================================================
-         ADS HEADER (PUT YOUR HIGH CPM AD CODE HERE)
-         ============================================================ -->
+    <!-- ====== ADS HEADER ====== -->
     <div style="text-align:center; padding:10px 0; background:#f8f9fa; border-bottom:2px solid #dee2e6;">
         <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
@@ -25,481 +20,96 @@
     </div>
 
     <style>
-        /* ============================================================
-               FULL STYLE - DARK THEME
-               ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0d0d0d;
-            color: #fff;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* ====== HEADER ====== */
-        .header {
-            background: #1a1a2e;
-            padding: 14px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e94560;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .header .logo {
-            font-size: 22px;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-        .header .logo span {
-            color: #e94560;
-        }
-        .header .logo small {
-            font-size: 12px;
-            font-weight: 400;
-            color: #666;
-            letter-spacing: 0;
-            margin-left: 4px;
-        }
-        .header .search-box {
-            display: flex;
-            gap: 8px;
-            flex: 1;
-            max-width: 480px;
-            min-width: 180px;
-        }
-        .header .search-box input {
-            flex: 1;
-            padding: 10px 18px;
-            border-radius: 30px;
-            border: 2px solid #2a2a4a;
-            background: #12121f;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s;
-            min-width: 120px;
-        }
-        .header .search-box input::placeholder {
-            color: #666;
-        }
-        .header .search-box input:focus {
-            border-color: #e94560;
-            background: #1a1a2e;
-        }
-        .header .search-box button {
-            padding: 10px 24px;
-            border-radius: 30px;
-            border: none;
-            background: #e94560;
-            color: #fff;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-            font-size: 14px;
-        }
-        .header .search-box button:hover {
-            background: #c73a52;
-            transform: scale(1.02);
-        }
-        .header .header-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .header .header-right a {
-            color: #aaa;
-            font-size: 13px;
-            transition: color 0.3s;
-        }
-        .header .header-right a:hover {
-            color: #e94560;
-        }
-
-        /* ====== ADS STICKY TOP ====== */
-        .ads-sticky {
-            background: #1a1a2e;
-            padding: 12px 10px;
-            text-align: center;
-            border-bottom: 1px solid #2a2a4a;
-            min-height: 80px;
-            position: sticky;
-            top: 70px;
-            z-index: 998;
-        }
-        .ads-sticky .ad-label,
-        .ads-inarticle .ad-label {
-            font-size: 10px;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-
-        /* ====== CONTAINER ====== */
-        .container {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 20px 15px 60px;
-        }
-
-        /* ====== HERO ====== */
-        .hero {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 16px;
-            padding: 30px 35px;
-            margin-bottom: 28px;
-            border: 1px solid #2a2a4a;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(233,69,96,0.08) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .hero h2 {
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            position: relative;
-            z-index: 1;
-        }
-        .hero h2 span {
-            color: #e94560;
-        }
-        .hero p {
-            color: #aaa;
-            font-size: 15px;
-            position: relative;
-            z-index: 1;
-        }
-        .hero .hero-stats {
-            display: flex;
-            gap: 30px;
-            margin-top: 16px;
-            position: relative;
-            z-index: 1;
-            flex-wrap: wrap;
-        }
-        .hero .hero-stats .stat {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #888;
-        }
-        .hero .hero-stats .stat strong {
-            color: #fff;
-            font-size: 18px;
-        }
-        .hero .hero-stats .stat .dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #e94560;
-            animation: pulse-dot 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
-        }
-
-        /* ====== ADS IN-ARTICLE ====== */
-        .ads-inarticle {
-            background: #1a1a2e;
-            padding: 18px 10px;
-            margin: 22px 0;
-            text-align: center;
-            border-radius: 10px;
-            border: 1px solid #2a2a4a;
-            min-height: 90px;
-        }
-
-        /* ====== FILTER CHIPS ====== */
-        .filter-chips {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .filter-chips .chip {
-            padding: 6px 18px;
-            border-radius: 30px;
-            border: 1px solid #2a2a4a;
-            background: transparent;
-            color: #aaa;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .filter-chips .chip:hover,
-        .filter-chips .chip.active {
-            background: #e94560;
-            border-color: #e94560;
-            color: #fff;
-        }
-
-        /* ====== LOADING ====== */
-        .loading {
-            text-align: center;
-            padding: 60px 0;
-            color: #888;
-            font-size: 18px;
-            grid-column: 1 / -1;
-        }
-        .loading .spinner {
-            display: inline-block;
-            width: 44px;
-            height: 44px;
-            border: 4px solid #2a2a4a;
-            border-top: 4px solid #e94560;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 16px;
-        }
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ====== MANGA GRID ====== */
-        .manga-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
-            gap: 22px;
-        }
-        .manga-card {
-            background: #1a1a2e;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #2a2a4a;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            cursor: pointer;
-        }
-        .manga-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 35px rgba(233, 69, 96, 0.12);
-            border-color: #e94560;
-        }
-        .manga-card .cover {
-            width: 100%;
-            aspect-ratio: 2 / 3;
-            object-fit: cover;
-            background: #12121f;
-            display: block;
-        }
-        .manga-card .info {
-            padding: 14px 16px 16px;
-        }
-        .manga-card .info .title {
-            font-size: 15px;
-            font-weight: 700;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-bottom: 4px;
-            color: #fff;
-            line-height: 1.3;
-        }
-        .manga-card .info .author {
-            font-size: 13px;
-            color: #aaa;
-        }
-        .manga-card .info .author strong {
-            color: #e94560;
-            font-weight: 600;
-        }
-        .manga-card .info .meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #666;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #2a2a4a;
-        }
-        .manga-card .info .meta span {
-            background: #252540;
-            padding: 2px 12px;
-            border-radius: 12px;
-        }
-
-        /* ====== PAGINATION ====== */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-        .pagination button {
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid #2a2a4a;
-            background: transparent;
-            color: #aaa;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .pagination button:hover:not(:disabled) {
-            background: #2a2a4a;
-            color: #fff;
-        }
-        .pagination button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-        .pagination button.active {
-            background: #e94560;
-            border-color: #e94560;
-            color: #fff;
-        }
-
-        /* ====== FOOTER ====== */
-        .footer {
-            text-align: center;
-            padding: 24px 15px;
-            background: #1a1a2e;
-            border-top: 1px solid #2a2a4a;
-            margin-top: 20px;
-        }
-        .footer p {
-            color: #555;
-            font-size: 13px;
-        }
-        .footer a {
-            color: #e94560;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .footer .footer-ads {
-            padding: 12px 0 4px;
-        }
-
-        /* ====== RESPONSIVE ====== */
+        /* ====== STYLE LENGKAP (sama kayak sebelumnya) ====== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d0d0d; color: #fff; line-height: 1.6; min-height: 100vh; }
+        a { text-decoration: none; color: inherit; }
+        .header { background: #1a1a2e; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e94560; position: sticky; top: 0; z-index: 999; flex-wrap: wrap; gap: 12px; }
+        .header .logo { font-size: 22px; font-weight: 800; color: #fff; }
+        .header .logo span { color: #e94560; }
+        .header .logo small { font-size: 12px; font-weight: 400; color: #666; margin-left: 4px; }
+        .header .search-box { display: flex; gap: 8px; flex: 1; max-width: 480px; min-width: 180px; }
+        .header .search-box input { flex: 1; padding: 10px 18px; border-radius: 30px; border: 2px solid #2a2a4a; background: #12121f; color: #fff; font-size: 14px; outline: none; transition: border-color 0.3s; min-width: 120px; }
+        .header .search-box input::placeholder { color: #666; }
+        .header .search-box input:focus { border-color: #e94560; background: #1a1a2e; }
+        .header .search-box button { padding: 10px 24px; border-radius: 30px; border: none; background: #e94560; color: #fff; font-weight: 700; cursor: pointer; transition: all 0.3s; white-space: nowrap; font-size: 14px; }
+        .header .search-box button:hover { background: #c73a52; transform: scale(1.02); }
+        .header .header-right { display: flex; align-items: center; gap: 16px; }
+        .header .header-right a { color: #aaa; font-size: 13px; transition: color 0.3s; }
+        .header .header-right a:hover { color: #e94560; }
+        .ads-sticky { background: #1a1a2e; padding: 12px 10px; text-align: center; border-bottom: 1px solid #2a2a4a; min-height: 80px; position: sticky; top: 70px; z-index: 998; }
+        .ads-sticky .ad-label, .ads-inarticle .ad-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .container { max-width: 1240px; margin: 0 auto; padding: 20px 15px 60px; }
+        .hero { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; padding: 30px 35px; margin-bottom: 28px; border: 1px solid #2a2a4a; position: relative; overflow: hidden; }
+        .hero h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; position: relative; z-index: 1; }
+        .hero h2 span { color: #e94560; }
+        .hero p { color: #aaa; font-size: 15px; position: relative; z-index: 1; }
+        .hero .hero-stats { display: flex; gap: 30px; margin-top: 16px; position: relative; z-index: 1; flex-wrap: wrap; }
+        .hero .hero-stats .stat { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #888; }
+        .hero .hero-stats .stat strong { color: #fff; font-size: 18px; }
+        .hero .hero-stats .stat .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e94560; animation: pulse-dot 1.5s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+        .ads-inarticle { background: #1a1a2e; padding: 18px 10px; margin: 22px 0; text-align: center; border-radius: 10px; border: 1px solid #2a2a4a; min-height: 90px; }
+        .filter-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .filter-chips .chip { padding: 6px 18px; border-radius: 30px; border: 1px solid #2a2a4a; background: transparent; color: #aaa; font-size: 13px; cursor: pointer; transition: all 0.3s; }
+        .filter-chips .chip:hover, .filter-chips .chip.active { background: #e94560; border-color: #e94560; color: #fff; }
+        .loading { text-align: center; padding: 60px 0; color: #888; font-size: 18px; grid-column: 1 / -1; }
+        .loading .spinner { display: inline-block; width: 44px; height: 44px; border: 4px solid #2a2a4a; border-top: 4px solid #e94560; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .manga-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 22px; }
+        .manga-card { background: #1a1a2e; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a4a; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; cursor: pointer; }
+        .manga-card:hover { transform: translateY(-5px); box-shadow: 0 10px 35px rgba(233, 69, 96, 0.12); border-color: #e94560; }
+        .manga-card .cover { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; background: #12121f; display: block; }
+        .manga-card .info { padding: 14px 16px 16px; }
+        .manga-card .info .title { font-size: 15px; font-weight: 700; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; color: #fff; line-height: 1.3; }
+        .manga-card .info .author { font-size: 13px; color: #aaa; }
+        .manga-card .info .author strong { color: #e94560; font-weight: 600; }
+        .manga-card .info .meta { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2a4a; }
+        .manga-card .info .meta span { background: #252540; padding: 2px 12px; border-radius: 12px; }
+        .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
+        .pagination button { padding: 10px 20px; border-radius: 30px; border: 1px solid #2a2a4a; background: transparent; color: #aaa; font-size: 14px; cursor: pointer; transition: all 0.3s; }
+        .pagination button:hover:not(:disabled) { background: #2a2a4a; color: #fff; }
+        .pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+        .footer { text-align: center; padding: 24px 15px; background: #1a1a2e; border-top: 1px solid #2a2a4a; margin-top: 20px; }
+        .footer p { color: #555; font-size: 13px; }
+        .footer a { color: #e94560; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .footer .footer-ads { padding: 12px 0 4px; }
         @media (max-width: 768px) {
-            .header {
-                padding: 12px 16px;
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .header .logo {
-                font-size: 20px;
-                text-align: center;
-            }
-            .header .search-box {
-                max-width: 100%;
-                min-width: unset;
-            }
-            .header .search-box input {
-                font-size: 13px;
-                padding: 8px 14px;
-            }
-            .header .search-box button {
-                padding: 8px 18px;
-                font-size: 13px;
-            }
-            .header .header-right {
-                justify-content: center;
-            }
-            .ads-sticky {
-                top: 125px;
-                min-height: 60px;
-                padding: 8px 6px;
-            }
-            .hero {
-                padding: 20px;
-            }
-            .hero h2 {
-                font-size: 20px;
-            }
-            .hero .hero-stats {
-                gap: 16px;
-            }
-            .hero .hero-stats .stat {
-                font-size: 12px;
-            }
-            .manga-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 14px;
-            }
-            .manga-card .info {
-                padding: 10px 12px 12px;
-            }
-            .manga-card .info .title {
-                font-size: 13px;
-            }
-            .manga-card .info .author {
-                font-size: 11px;
-            }
-            .manga-card .info .meta {
-                font-size: 10px;
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-            .filter-chips .chip {
-                font-size: 12px;
-                padding: 4px 14px;
-            }
+            .header { padding: 12px 16px; flex-direction: column; align-items: stretch; }
+            .header .logo { font-size: 20px; text-align: center; }
+            .header .search-box { max-width: 100%; min-width: unset; }
+            .header .search-box input { font-size: 13px; padding: 8px 14px; }
+            .header .search-box button { padding: 8px 18px; font-size: 13px; }
+            .header .header-right { justify-content: center; }
+            .ads-sticky { top: 125px; min-height: 60px; padding: 8px 6px; }
+            .hero { padding: 20px; }
+            .hero h2 { font-size: 20px; }
+            .hero .hero-stats { gap: 16px; }
+            .hero .hero-stats .stat { font-size: 12px; }
+            .manga-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+            .manga-card .info { padding: 10px 12px 12px; }
+            .manga-card .info .title { font-size: 13px; }
+            .manga-card .info .author { font-size: 11px; }
+            .manga-card .info .meta { font-size: 10px; flex-wrap: wrap; gap: 4px; }
+            .filter-chips .chip { font-size: 12px; padding: 4px 14px; }
         }
         @media (max-width: 480px) {
-            .manga-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 12px;
-            }
-            .container {
-                padding: 12px 10px 40px;
-            }
-            .hero h2 {
-                font-size: 17px;
-            }
-            .hero p {
-                font-size: 13px;
-            }
-            .pagination button {
-                padding: 6px 14px;
-                font-size: 12px;
-            }
+            .manga-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+            .container { padding: 12px 10px 40px; }
+            .hero h2 { font-size: 17px; }
+            .hero p { font-size: 13px; }
+            .pagination button { padding: 6px 14px; font-size: 12px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ============================================================
-     HEADER
-     ============================================================ -->
+<!-- ====== HEADER ====== -->
 <header class="header">
-    <div class="logo">
-        📖 <span>Manga</span>Reader <small>· Free</small>
-    </div>
+    <div class="logo">📖 <span>Manga</span>Reader <small>· Free</small></div>
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search manga, title, or author..." onkeyup="if(event.key==='Enter') searchManga()">
+        <input type="text" id="searchInput" placeholder="Search manga..." onkeyup="if(event.key==='Enter') searchManga()">
         <button onclick="searchManga()">🔍 Search</button>
     </div>
     <div class="header-right">
@@ -508,48 +118,31 @@
     </div>
 </header>
 
-<!-- ============================================================
-     ADS STICKY TOP (HIGH CPM)
-     ============================================================ -->
-<div class="ads-sticky" id="adsTop">
+<!-- ====== ADS STICKY ====== -->
+<div class="ads-sticky">
     <div class="ad-label">— Advertisement —</div>
-    <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
-<!-- ============================================================
-     MAIN CONTAINER
-     ============================================================ -->
+<!-- ====== MAIN ====== -->
 <div class="container">
-
-    <!-- ====== HERO ====== -->
     <section class="hero">
         <h2>📚 Largest <span>Manga</span> Collection</h2>
-        <p>Discover and read thousands of manga from various genres. Free and no registration required!</p>
+        <p>Discover and read thousands of manga from various genres. Free!</p>
         <div class="hero-stats">
-            <div class="stat">
-                <span class="dot"></span>
-                <strong id="totalManga">0</strong> manga available
-            </div>
-            <div class="stat">
-                🆕 <strong>Daily</strong> updates
-            </div>
-            <div class="stat">
-                🌍 <strong>Multi</strong> language
-            </div>
+            <div class="stat"><span class="dot"></span><strong id="totalManga">0</strong> manga available</div>
+            <div class="stat">🆕 <strong>Daily</strong> updates</div>
+            <div class="stat">🌍 <strong>Multi</strong> language</div>
         </div>
     </section>
 
-    <!-- ====== ADS IN-ARTICLE #1 ====== -->
     <div class="ads-inarticle">
         <div class="ad-label">— Advertisement —</div>
-        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <!-- ====== FILTER CHIPS ====== -->
     <div class="filter-chips" id="filterChips">
         <span class="chip active" data-filter="" onclick="applyFilter(this, '')">🔥 All</span>
         <span class="chip" data-filter="shounen" onclick="applyFilter(this, 'shounen')">⚔️ Shounen</span>
@@ -561,59 +154,38 @@
         <span class="chip" data-filter="fantasy" onclick="applyFilter(this, 'fantasy')">🐉 Fantasy</span>
     </div>
 
-    <!-- ====== MANGA GRID ====== -->
     <div id="mangaGrid" class="manga-grid">
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>Loading manga from MangaDex...</p>
-        </div>
+        <div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>
     </div>
 
-    <!-- ====== PAGINATION ====== -->
     <div class="pagination" id="pagination">
         <button id="prevPage" onclick="changePage(-1)" disabled>◀ Previous</button>
         <span id="pageInfo" style="color:#666; font-size:14px; padding:8px 0;">Page 1</span>
         <button id="nextPage" onclick="changePage(1)">Next ▶</button>
     </div>
 
-    <!-- ====== ADS IN-ARTICLE #2 ====== -->
     <div class="ads-inarticle">
         <div class="ad-label">— Advertisement —</div>
-        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
-
 </div>
 
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
+<!-- ====== FOOTER ====== -->
 <footer class="footer">
-    <p>
-        © <?php echo date('Y'); ?> <a href="#">MangaReader</a> · Data from 
-        <a href="https://mangadex.org" target="_blank" rel="noopener noreferrer">MangaDex</a>
-    </p>
-    <p style="color:#444; font-size:12px; margin-top:4px;">
-        Read manga online for free. Updated daily.
-    </p>
+    <p>© <?php echo date('Y'); ?> <a href="#">MangaReader</a> · Data from <a href="https://mangadex.org" target="_blank">MangaDex</a></p>
     <div class="footer-ads">
-        <!-- FOOTER ADS -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 </footer>
 
-<!-- ============================================================
-     JAVASCRIPT - FULL LOGIC (PAKE WORKER LO)
-     ============================================================ -->
+<!-- ====== JAVASCRIPT ====== -->
 <script>
     // ============================================================
-    // CONFIGURATION - PAKE WORKER PRIBADI
+    // CONFIGURATION
     // ============================================================
-    // 🔥 GANTI DENGAN URL WORKER LO
     const WORKER_URL = 'https://mangaproxy.aidenwilliamson888.workers.dev';
-    const MANGADEX_API = 'https://api.mangadex.org';
 
     let currentQuery = '';
     let currentOffset = 0;
@@ -622,14 +194,14 @@
     let currentFilter = '';
 
     // ============================================================
-    // GET COVER URL
+    // GET COVER URL - FIXED
     // ============================================================
     function getCoverUrl(manga) {
         const coverRel = manga.relationships.find(r => r.type === 'cover_art');
         if (!coverRel) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
         const filename = coverRel.attributes?.fileName;
         if (!filename) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
-        return `https://uploads.mangadex.org/covers/${manga.id}/${filename}.256.jpg`;
+        return `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
     }
 
     // ============================================================
@@ -665,7 +237,7 @@
     }
 
     // ============================================================
-    // RENDER MANGA TO GRID
+    // RENDER MANGA
     // ============================================================
     function renderManga(data) {
         const grid = document.getElementById('mangaGrid');
@@ -673,7 +245,6 @@
             grid.innerHTML = `
                 <div class="loading" style="grid-column:1/-1;">
                     <p style="color:#888; font-size:18px;">😕 No manga found</p>
-                    <p style="color:#666; font-size:14px; margin-top:6px;">Try different keywords or reset filters</p>
                     <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
                 </div>
             `;
@@ -703,104 +274,95 @@
             `;
         }).join('');
 
-        // Update total manga count
         document.getElementById('totalManga').textContent = data.length;
     }
 
-    // ====== FETCH MANGA VIA WORKER ======
-async function fetchManga(query = '', offset = 0, genre = '') {
-    const grid = document.getElementById('mangaGrid');
-    grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>`;
+    // ============================================================
+    // FETCH MANGA VIA WORKER
+    // ============================================================
+    async function fetchManga(query = '', offset = 0, genre = '') {
+        const grid = document.getElementById('mangaGrid');
+        grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>`;
 
-    try {
-        // ====== BUILD PARAMETERS ======
-        const params = new URLSearchParams();
-        params.append('limit', LIMIT.toString());
-        params.append('offset', offset.toString());
-        params.append('includes[]', 'cover_art');
-        params.append('includes[]', 'author');
-        params.append('order[latestUploadedChapter]', 'desc');
-        
-        // Content rating
-        ['safe', 'suggestive', 'erotica'].forEach(r => params.append('contentRating[]', r));
-        params.append('availableTranslatedLanguage[]', 'en');
+        try {
+            const params = new URLSearchParams();
+            params.append('limit', LIMIT.toString());
+            params.append('offset', offset.toString());
+            params.append('includes[]', 'cover_art');
+            params.append('includes[]', 'author');
+            params.append('order[latestUploadedChapter]', 'desc');
+            
+            ['safe', 'suggestive', 'erotica'].forEach(r => params.append('contentRating[]', r));
+            params.append('availableTranslatedLanguage[]', 'en');
 
-        if (query && query.trim()) {
-            params.append('title', query.trim());
-        }
+            if (query && query.trim()) params.append('title', query.trim());
 
-        // Genre filter
-        if (genre) {
-            const genreMap = {
-                'shounen': '0e159c0a-1c3a-4e87-9b78-d3c5b3e5f9b2',
-                'shoujo': 'b5a841c2-e71c-44f4-868c-1a2e9b6f7a3c',
-                'seinen': '1f1b6b4f-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
-                'isekai': 'a7f2c8b1-9e4d-4f5e-9b8a-7c3d5e9f1b2a',
-                'comedy': '4d32cc48-9f00-4e8a-8c9a-1e3f5b7d9a1c',
-                'romance': '423e2eae-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
-                'fantasy': 'cdc7a9f7-3b5a-4e9f-8b3a-9e6f5b3a7c1e'
-            };
-            const tagId = genreMap[genre.toLowerCase()];
-            if (tagId) params.append('includedTags[]', tagId);
-        }
+            if (genre) {
+                const genreMap = {
+                    'shounen': '0e159c0a-1c3a-4e87-9b78-d3c5b3e5f9b2',
+                    'shoujo': 'b5a841c2-e71c-44f4-868c-1a2e9b6f7a3c',
+                    'seinen': '1f1b6b4f-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
+                    'isekai': 'a7f2c8b1-9e4d-4f5e-9b8a-7c3d5e9f1b2a',
+                    'comedy': '4d32cc48-9f00-4e8a-8c9a-1e3f5b7d9a1c',
+                    'romance': '423e2eae-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
+                    'fantasy': 'cdc7a9f7-3b5a-4e9f-8b3a-9e6f5b3a7c1e'
+                };
+                const tagId = genreMap[genre.toLowerCase()];
+                if (tagId) params.append('includedTags[]', tagId);
+            }
 
-        // ====== PAKE WORKER DENGAN FORMAT YANG BENAR ======
-        // 🔥 GABUNGIN WORKER_URL + TARGET_URL
-        const targetUrl = `${WORKER_URL}/https://api.mangadex.org/manga?${params.toString()}`;
-        console.log('🔍 Fetching via Worker:', targetUrl);
+            const targetUrl = `${WORKER_URL}/https://api.mangadex.org/manga?${params.toString()}`;
+            console.log('🔍 Fetching:', targetUrl);
 
-        const response = await fetch(targetUrl);
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ Response error:', response.status, errorText);
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
+            const response = await fetch(targetUrl);
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Response error:', response.status, errorText);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
 
-        const result = await response.json();
-        console.log('✅ Data received:', result);
+            const result = await response.json();
+            console.log('✅ Data:', result);
 
-        // Cek error dari MangaDex
-        if (result.errors) {
-            console.error('❌ MangaDex errors:', result.errors);
-            throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
-        }
+            if (result.errors) {
+                console.error('❌ MangaDex errors:', result.errors);
+                throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
+            }
 
-        // Filter manga yang punya cover
-        const validData = (result.data || []).filter(m => 
-            m.relationships && m.relationships.some(r => r.type === 'cover_art')
-        );
+            const validData = (result.data || []).filter(m => 
+                m.relationships && m.relationships.some(r => r.type === 'cover_art')
+            );
 
-        totalData = result.total || validData.length || 0;
+            totalData = result.total || validData.length || 0;
 
-        if (validData.length === 0) {
+            if (validData.length === 0) {
+                grid.innerHTML = `
+                    <div class="loading" style="grid-column:1/-1;">
+                        <p style="color:#888; font-size:18px;">😕 No manga found</p>
+                        <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
+                    </div>
+                `;
+                updatePagination(offset);
+                return;
+            }
+
+            renderManga(validData);
+            updatePagination(offset);
+
+        } catch (error) {
+            console.error('❌ Fetch error:', error);
             grid.innerHTML = `
                 <div class="loading" style="grid-column:1/-1;">
-                    <p style="color:#888; font-size:18px;">😕 No manga found</p>
-                    <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
+                    <p style="color:#e94560; font-size:18px;">❌ Failed to load data</p>
+                    <p style="color:#666; font-size:14px; margin-top:6px;">${error.message}</p>
+                    <button onclick="fetchManga('${query}', 0, '${genre}')" 
+                            style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">
+                        🔄 Try Again
+                    </button>
                 </div>
             `;
-            updatePagination(offset);
-            return;
         }
-
-        renderManga(validData);
-        updatePagination(offset);
-
-    } catch (error) {
-        console.error('❌ Fetch error:', error);
-        grid.innerHTML = `
-            <div class="loading" style="grid-column:1/-1;">
-                <p style="color:#e94560; font-size:18px;">❌ Failed to load data</p>
-                <p style="color:#666; font-size:14px; margin-top:6px;">${error.message}</p>
-                <p style="color:#555; font-size:13px; margin-top:4px;">Check console for details.</p>
-                <button onclick="fetchManga('${query}', 0, '${genre}')" 
-                        style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">
-                    🔄 Try Again
-                </button>
-            </div>
-        `;
     }
-}
 
     // ============================================================
     // PAGINATION
@@ -821,13 +383,12 @@ async function fetchManga(query = '', offset = 0, genre = '') {
     }
 
     // ============================================================
-    // SEARCH
+    // SEARCH & FILTER
     // ============================================================
     function searchManga() {
         const input = document.getElementById('searchInput');
         currentQuery = input.value.trim();
         currentOffset = 0;
-        // Reset filter chips
         document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
         document.querySelector('.filter-chips .chip[data-filter=""]')?.classList.add('active');
         currentFilter = '';
@@ -844,9 +405,6 @@ async function fetchManga(query = '', offset = 0, genre = '') {
         fetchManga('', 0, '');
     }
 
-    // ============================================================
-    // FILTER GENRE
-    // ============================================================
     function applyFilter(element, genre) {
         document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
         element.classList.add('active');
@@ -856,20 +414,18 @@ async function fetchManga(query = '', offset = 0, genre = '') {
     }
 
     // ============================================================
-    // CLICK MANGA - FAKE READER / DOWNLOAD
+    // CLICK MANGA - GANTI DENGAN LINK FAKE READER LO
     // ============================================================
     function openManga(id, title) {
         // 🔥 Ganti dengan link fake reader / download lo
-        alert(`📖 Open Manga: ${decodeURIComponent(title)}\nID: ${id}\n\nReplace this function with your fake reader link!`);
         // Contoh: window.location.href = `read.html?id=${id}`;
-        // window.open(`https://yourdomain.com/read/${id}`, '_blank');
+        alert(`📖 Open Manga: ${decodeURIComponent(title)}\nID: ${id}\n\nReplace this function with your fake reader link!`);
     }
 
     // ============================================================
     // INITIAL LOAD
     // ============================================================
     document.addEventListener('DOMContentLoaded', () => {
-        // Get ?search= parameter from URL
         const urlParams = new URLSearchParams(window.location.search);
         const searchQuery = urlParams.get('search');
         if (searchQuery) {
