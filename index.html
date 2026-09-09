@@ -16,18 +16,17 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- ============================================================
-         ADS HEADER (PUT YOUR AD CODE HERE)
+         ADS HEADER (PUT YOUR HIGH CPM AD CODE HERE)
          ============================================================ -->
     <div style="text-align:center; padding:10px 0; background:#f8f9fa; border-bottom:2px solid #dee2e6;">
-        <!-- PUT YOUR HIGH CPM AD CODE HERE -->
-        <!-- Example: Adsterra, PropellerAds, AdSense -->
+        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <style>
         /* ============================================================
-               FULL STYLE - DARK THEME (ENGLISH VERSION)
+               FULL STYLE - DARK THEME
                ============================================================ */
         * {
             margin: 0;
@@ -159,7 +158,7 @@
             padding: 20px 15px 60px;
         }
 
-        /* ====== HERO / JUMBOTRON ====== */
+        /* ====== HERO ====== */
         .hero {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             border-radius: 16px;
@@ -514,7 +513,7 @@
      ============================================================ -->
 <div class="ads-sticky" id="adsTop">
     <div class="ad-label">— Advertisement —</div>
-    <!-- PUT YOUR HIGH CPM AD CODE HERE -->
+    <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
@@ -545,7 +544,7 @@
     <!-- ====== ADS IN-ARTICLE #1 ====== -->
     <div class="ads-inarticle">
         <div class="ad-label">— Advertisement —</div>
-        <!-- PUT YOUR HIGH CPM AD CODE HERE -->
+        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
@@ -580,7 +579,7 @@
     <!-- ====== ADS IN-ARTICLE #2 ====== -->
     <div class="ads-inarticle">
         <div class="ad-label">— Advertisement —</div>
-        <!-- PUT YOUR HIGH CPM AD CODE HERE -->
+        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
@@ -606,14 +605,15 @@
 </footer>
 
 <!-- ============================================================
-     JAVASCRIPT - FULL LOGIC (ENGLISH, FIXED)
+     JAVASCRIPT - FULL LOGIC (PAKE WORKER LO)
      ============================================================ -->
 <script>
     // ============================================================
-    // CONFIGURATION
+    // CONFIGURATION - PAKE WORKER PRIBADI
     // ============================================================
-    const BASE_URL = 'https://api.mangadex.org';
-    const PROXY_URL = '/api/proxy'; // Cloudflare Pages Functions
+    // 🔥 GANTI DENGAN URL WORKER LO
+    const WORKER_URL = 'https://mangaproxy.aidenwilliamson888.workers.dev';
+    const MANGADEX_API = 'https://api.mangadex.org';
 
     let currentQuery = '';
     let currentOffset = 0;
@@ -674,7 +674,7 @@
                 <div class="loading" style="grid-column:1/-1;">
                     <p style="color:#888; font-size:18px;">😕 No manga found</p>
                     <p style="color:#666; font-size:14px; margin-top:6px;">Try different keywords or reset filters</p>
-                    <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">🔄 Reset</button>
+                    <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
                 </div>
             `;
             return;
@@ -708,35 +708,35 @@
     }
 
     // ============================================================
-    // FETCH MANGA FROM MANGADEX VIA PROXY (FIXED)
+    // FETCH MANGA VIA WORKER
     // ============================================================
     async function fetchManga(query = '', offset = 0, genre = '') {
         const grid = document.getElementById('mangaGrid');
         grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>`;
 
         try {
-            // ====== BUILD PARAMETERS CORRECTLY ======
+            // ====== BUILD PARAMETERS ======
             const params = new URLSearchParams();
-            
-            // Basic parameters
             params.append('limit', LIMIT.toString());
             params.append('offset', offset.toString());
-            params.append('includes', 'cover_art,author');
+            
+            // 🔥 FIX: includes HARUS array (pake [] untuk setiap value)
+            params.append('includes[]', 'cover_art');
+            params.append('includes[]', 'author');
+            
             params.append('order[latestUploadedChapter]', 'desc');
             
-            // 🔥 FIX: contentRating must be sent as array with correct format
-            const ratings = ['safe', 'suggestive', 'erotica'];
-            ratings.forEach(r => params.append('contentRating[]', r));
+            // Content rating
+            ['safe', 'suggestive', 'erotica'].forEach(r => params.append('contentRating[]', r));
             
-            // 🔥 FIX: availableTranslatedLanguage as array
+            // Language
             params.append('availableTranslatedLanguage[]', 'en');
 
-            // Search query (title)
             if (query && query.trim()) {
                 params.append('title', query.trim());
             }
 
-            // 🔥 FIX: Genre filter with valid tag IDs
+            // Genre filter
             if (genre) {
                 const genreMap = {
                     'shounen': '0e159c0a-1c3a-4e87-9b78-d3c5b3e5f9b2',
@@ -748,20 +748,15 @@
                     'fantasy': 'cdc7a9f7-3b5a-4e9f-8b3a-9e6f5b3a7c1e'
                 };
                 const tagId = genreMap[genre.toLowerCase()];
-                if (tagId) {
-                    params.append('includedTags[]', tagId);
-                }
+                if (tagId) params.append('includedTags[]', tagId);
             }
 
-            // ====== BUILD URL ======
-            const targetUrl = `${BASE_URL}/manga?${params.toString()}`;
-            const proxyUrl = `${PROXY_URL}?url=${encodeURIComponent(targetUrl)}`;
+            // ====== PAKE WORKER ======
+            // Format: WORKER_URL / https://api.mangadex.org/endpoint?params
+            const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga?${params.toString()}`)}`;
+            console.log('🔍 Fetching via Worker:', targetUrl);
 
-            console.log('🔍 Fetching URL:', targetUrl);
-            console.log('🔍 Proxy URL:', proxyUrl);
-
-            // ====== FETCH ======
-            const response = await fetch(proxyUrl);
+            const response = await fetch(targetUrl);
             
             if (!response.ok) {
                 const errorText = await response.text();
@@ -771,19 +766,19 @@
 
             const result = await response.json();
             console.log('✅ Data received:', result);
-            console.log('✅ Manga count:', result.data?.length || 0);
 
-            // Check for MangaDex error
-            if (result.error) {
-                throw new Error(`MangaDex API error: ${result.error}`);
+            // Cek error dari MangaDex
+            if (result.errors) {
+                console.error('❌ MangaDex errors:', result.errors);
+                throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
             }
 
-            // Filter manga that have cover
+            // Filter manga yang punya cover
             const validData = (result.data || []).filter(m => 
                 m.relationships && m.relationships.some(r => r.type === 'cover_art')
             );
 
-            // Store total for pagination
+            // Store total untuk pagination
             totalData = result.total || validData.length || 0;
 
             if (validData.length === 0) {
@@ -791,7 +786,7 @@
                     <div class="loading" style="grid-column:1/-1;">
                         <p style="color:#888; font-size:18px;">😕 No manga found</p>
                         <p style="color:#666; font-size:14px; margin-top:6px;">Try different keywords or reset filters</p>
-                        <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">🔄 Reset</button>
+                        <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
                     </div>
                 `;
                 updatePagination(offset);
@@ -807,7 +802,7 @@
                 <div class="loading" style="grid-column:1/-1;">
                     <p style="color:#e94560; font-size:18px;">❌ Failed to load data</p>
                     <p style="color:#666; font-size:14px; margin-top:6px;">${error.message}</p>
-                    <p style="color:#555; font-size:13px; margin-top:4px;">Please refresh or try a different keyword.</p>
+                    <p style="color:#555; font-size:13px; margin-top:4px;">Check console for details.</p>
                     <button onclick="fetchManga('${query}', 0, '${genre}')" 
                             style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">
                         🔄 Try Again
@@ -874,10 +869,9 @@
     // CLICK MANGA - FAKE READER / DOWNLOAD
     // ============================================================
     function openManga(id, title) {
-        // Replace with your fake reader / download link
-        // Example: window.location.href = `read.php?id=${id}`;
+        // 🔥 Ganti dengan link fake reader / download lo
         alert(`📖 Open Manga: ${decodeURIComponent(title)}\nID: ${id}\n\nReplace this function with your fake reader link!`);
-        // window.location.href = `/read.html?id=${id}`;
+        // Contoh: window.location.href = `read.html?id=${id}`;
         // window.open(`https://yourdomain.com/read/${id}`, '_blank');
     }
 
