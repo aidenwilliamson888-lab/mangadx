@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manga Reader - Baca Manga Online</title>
+
+    <!-- ====== IKLAN HIGH CPM - HEADER (TARUH KODE LO DI SINI) ====== -->
+    <div style="text-align:center; padding:10px 0; background:#f8f9fa; border-bottom:2px solid #dee2e6;">
+        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI (Adsterra, PropellerAds, AdSense, dll) -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <style>
+        /* ====== STYLE ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+            line-height: 1.6;
+        }
+        /* HEADER */
+        .header {
+            background: #1a1a2e;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e94560;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .header h1 span { color: #e94560; }
+        .header .search-box {
+            display: flex;
+            gap: 8px;
+        }
+        .header .search-box input {
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: none;
+            background: #2a2a4a;
+            color: #fff;
+            font-size: 14px;
+            min-width: 180px;
+            outline: none;
+        }
+        .header .search-box input::placeholder { color: #888; }
+        .header .search-box input:focus { background: #3a3a5a; }
+        .header .search-box button {
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: none;
+            background: #e94560;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .header .search-box button:hover { background: #c73a52; }
+
+        /* ADS STICKY TOP */
+        .ads-sticky {
+            background: #1a1a2e;
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #2a2a4a;
+            min-height: 80px;
+            position: sticky;
+            top: 66px;
+            z-index: 998;
+        }
+        .ads-sticky .ad-label {
+            font-size: 10px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 15px 80px;
+        }
+
+        /* LOADING */
+        .loading {
+            text-align: center;
+            padding: 60px 0;
+            color: #888;
+            font-size: 18px;
+        }
+        .loading .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #2a2a4a;
+            border-top: 4px solid #e94560;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* GRID MANGA */
+        .manga-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 10px;
+        }
+        .manga-card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #2a2a4a;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .manga-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.15);
+            border-color: #e94560;
+        }
+        .manga-card .cover {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            background: #12121f;
+        }
+        .manga-card .info {
+            padding: 14px 16px 16px;
+        }
+        .manga-card .info .title {
+            font-size: 15px;
+            font-weight: 700;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+        .manga-card .info .author {
+            font-size: 13px;
+            color: #aaa;
+        }
+        .manga-card .info .author strong { color: #e94560; }
+        .manga-card .info .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #2a2a4a;
+        }
+        .manga-card .info .meta span { background: #252540; padding: 2px 10px; border-radius: 12px; }
+
+        /* ADS IN-ARTICLE */
+        .ads-inarticle {
+            background: #1a1a2e;
+            padding: 18px 10px;
+            margin: 25px 0;
+            text-align: center;
+            border-radius: 10px;
+            border: 1px solid #2a2a4a;
+            min-height: 90px;
+        }
+        .ads-inarticle .ad-label {
+            font-size: 10px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; align-items: stretch; }
+            .header .search-box input { min-width: unset; width: 100%; }
+            .header .search-box button { width: 100%; }
+            .ads-sticky { top: 110px; }
+            .manga-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        }
+        @media (max-width: 480px) {
+            .manga-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+            .manga-card .info { padding: 10px 12px 12px; }
+            .manga-card .info .title { font-size: 13px; }
+            .manga-card .info .author { font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ====== HEADER ====== -->
+<div class="header">
+    <h1>📖 <span>Manga</span>Reader</h1>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari manga..." onkeyup="if(event.key==='Enter') searchManga()">
+        <button onclick="searchManga()">🔍 Cari</button>
+    </div>
+</div>
+
+<!-- ====== ADS STICKY TOP (HIGH CPM) ====== -->
+<div class="ads-sticky">
+    <div class="ad-label">— Iklan —</div>
+    <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- ====== MAIN CONTAINER ====== -->
+<div class="container">
+
+    <!-- ====== ADS IN-ARTICLE #1 ====== -->
+    <div class="ads-inarticle">
+        <div class="ad-label">— Iklan —</div>
+        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- ====== MANGA GRID ====== -->
+    <div id="mangaGrid" class="manga-grid">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Memuat manga dari MangaDex...</p>
+        </div>
+    </div>
+
+    <!-- ====== ADS IN-ARTICLE #2 ====== -->
+    <div class="ads-inarticle">
+        <div class="ad-label">— Iklan —</div>
+        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+</div>
+
+<!-- ====== FOOTER ====== -->
+<div style="text-align:center; padding:18px 10px; background:#1a1a2e; border-top:1px solid #2a2a4a; margin-top:20px;">
+    <p style="color:#555; font-size:13px;">
+        © <?php echo date('Y'); ?> MangaReader · Data dari <a href="https://mangadex.org" target="_blank" style="color:#e94560; text-decoration:none;">MangaDex</a>
+    </p>
+    <!-- FOOTER ADS -->
+    <div style="padding:10px 0;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+</div>
+
+<!-- ====== JAVASCRIPT - AMBIL DATA DARI MANGADEX API ====== -->
+<script>
+    const BASE_URL = 'https://api.mangadex.org';
+
+    /**
+     * Ambil cover URL dari MangaDex
+     * https://api.mangadex.org/docs/03-manga/covers/
+     */
+    function getCoverUrl(manga) {
+        const coverRel = manga.relationships.find(r => r.type === 'cover_art');
+        if (!coverRel) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+        const filename = coverRel.attributes?.fileName;
+        if (!filename) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+        return `https://uploads.mangadex.org/covers/${manga.id}/${filename}.256.jpg`;
+    }
+
+    /**
+     * Ambil nama author dari manga
+     */
+    function getAuthor(manga) {
+        const authorRel = manga.relationships.find(r => r.type === 'author');
+        if (!authorRel) return 'Unknown';
+        return authorRel.attributes?.name || 'Unknown';
+    }
+
+    /**
+     * Ambil judul dalam bahasa Inggris atau default
+     */
+    function getTitle(manga) {
+        const titles = manga.attributes.title;
+        return titles.en || Object.values(titles)[0] || 'No Title';
+    }
+
+    /**
+     * Render manga ke grid
+     */
+    function renderManga(data) {
+        const grid = document.getElementById('mangaGrid');
+        if (!data || data.length === 0) {
+            grid.innerHTML = `<div class="loading"><p style="color:#888;">Tidak ada manga ditemukan. Coba kata kunci lain.</p></div>`;
+            return;
+        }
+
+        grid.innerHTML = data.map(manga => {
+            const title = getTitle(manga);
+            const author = getAuthor(manga);
+            const cover = getCoverUrl(manga);
+            const chapters = manga.attributes?.lastChapter || '?';
+            const status = manga.attributes?.status || 'unknown';
+
+            return `
+                <div class="manga-card" onclick="openManga('${manga.id}')">
+                    <img class="cover" src="${cover}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'">
+                    <div class="info">
+                        <div class="title">${title}</div>
+                        <div class="author">Oleh: <strong>${author}</strong></div>
+                        <div class="meta">
+                            <span>📄 Ch. ${chapters}</span>
+                            <span>${status}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    /**
+     * Fetch manga dari MangaDex API
+     * Endpoint: GET /manga
+     * Docs: https://api.mangadex.org/docs/03-manga/search/
+     */
+    async function fetchManga(query = '') {
+        const grid = document.getElementById('mangaGrid');
+        grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Memuat manga...</p></div>`;
+
+        try {
+            const params = new URLSearchParams({
+                limit: 30,
+                includes: 'cover_art,author',
+                'order[latestUploadedChapter]': 'desc',
+                'contentRating[]': ['safe', 'suggestive', 'erotica'],
+                'availableTranslatedLanguage[]': 'en'
+            });
+
+            if (query.trim()) {
+                params.set('title', query.trim());
+            }
+
+            const url = `${BASE_URL}/manga?${params.toString()}`;
+            console.log('Fetching:', url);
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const result = await response.json();
+            console.log('Data received:', result.data?.length || 0, 'manga');
+
+            // Filter manga yang punya cover
+            const validData = (result.data || []).filter(m => 
+                m.relationships.some(r => r.type === 'cover_art')
+            );
+
+            renderManga(validData);
+
+        } catch (error) {
+            console.error('Error:', error);
+            grid.innerHTML = `
+                <div class="loading" style="grid-column:1/-1;">
+                    <p style="color:#e94560;">❌ Gagal memuat data: ${error.message}</p>
+                    <p style="color:#666; font-size:14px; margin-top:8px;">
+                        Coba refresh atau cari dengan kata kunci lain.
+                    </p>
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * Fungsi search (dipanggil dari tombol/enter)
+     */
+    function searchManga() {
+        const input = document.getElementById('searchInput');
+        fetchManga(input.value);
+    }
+
+    /**
+     * Fungsi klik manga - arahkan ke fake reader / download
+     * Lo bisa ganti URL ini dengan halaman download atau fake reader lo
+     */
+    function openManga(id) {
+        // Redirect ke halaman detail/fake reader
+        // Contoh: window.location.href = `read.php?id=${id}`;
+        alert(`Buka manga ID: ${id}\nGanti ini dengan link fake reader lo!`);
+        // window.location.href = `read.html?id=${id}`;
+    }
+
+    // ====== LOAD PERTAMA KALI ======
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ambil parameter ?search= dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('search');
+        if (searchQuery) {
+            document.getElementById('searchInput').value = searchQuery;
+            fetchManga(searchQuery);
+        } else {
+            // Default: trending / latest
+            fetchManga('');
+        }
+    });
+</script>
+
+</body>
+</html>
