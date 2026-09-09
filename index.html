@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MangaReader - Read Manga Online Free</title>
     
-    <meta name="description" content="Read manga online for free from MangaDx. Complete collection of latest and most popular manga.">
+    <meta name="description" content="Read manga online for free from MangaDx.">
     <meta name="keywords" content="read manga, manga online, free manga, comic online, MangaDex">
-    <meta property="og:description" content="Read manga online for free from MangaDx. Complete collection of latest and most popular manga.">
     <meta property="og:title" content="MangaReader - Read Manga Online Free">
+    <meta property="og:description" content="Read manga online for free from MangaDx. Complete collection of latest and most popular manga.">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -20,10 +20,10 @@
     </div>
 
     <style>
-        /* ====== STYLE LENGKAP (sama kayak sebelumnya) ====== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d0d0d; color: #fff; line-height: 1.6; min-height: 100vh; }
         a { text-decoration: none; color: inherit; }
+        
         .header { background: #1a1a2e; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e94560; position: sticky; top: 0; z-index: 999; flex-wrap: wrap; gap: 12px; }
         .header .logo { font-size: 22px; font-weight: 800; color: #fff; }
         .header .logo span { color: #e94560; }
@@ -37,9 +37,12 @@
         .header .header-right { display: flex; align-items: center; gap: 16px; }
         .header .header-right a { color: #aaa; font-size: 13px; transition: color 0.3s; }
         .header .header-right a:hover { color: #e94560; }
+        
         .ads-sticky { background: #1a1a2e; padding: 12px 10px; text-align: center; border-bottom: 1px solid #2a2a4a; min-height: 80px; position: sticky; top: 70px; z-index: 998; }
         .ads-sticky .ad-label, .ads-inarticle .ad-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        
         .container { max-width: 1240px; margin: 0 auto; padding: 20px 15px 60px; }
+        
         .hero { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; padding: 30px 35px; margin-bottom: 28px; border: 1px solid #2a2a4a; position: relative; overflow: hidden; }
         .hero h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; position: relative; z-index: 1; }
         .hero h2 span { color: #e94560; }
@@ -49,13 +52,17 @@
         .hero .hero-stats .stat strong { color: #fff; font-size: 18px; }
         .hero .hero-stats .stat .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #e94560; animation: pulse-dot 1.5s ease-in-out infinite; }
         @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+        
         .ads-inarticle { background: #1a1a2e; padding: 18px 10px; margin: 22px 0; text-align: center; border-radius: 10px; border: 1px solid #2a2a4a; min-height: 90px; }
+        
         .filter-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
         .filter-chips .chip { padding: 6px 18px; border-radius: 30px; border: 1px solid #2a2a4a; background: transparent; color: #aaa; font-size: 13px; cursor: pointer; transition: all 0.3s; }
         .filter-chips .chip:hover, .filter-chips .chip.active { background: #e94560; border-color: #e94560; color: #fff; }
+        
         .loading { text-align: center; padding: 60px 0; color: #888; font-size: 18px; grid-column: 1 / -1; }
         .loading .spinner { display: inline-block; width: 44px; height: 44px; border: 4px solid #2a2a4a; border-top: 4px solid #e94560; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        
         .manga-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 22px; }
         .manga-card { background: #1a1a2e; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a4a; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; cursor: pointer; }
         .manga-card:hover { transform: translateY(-5px); box-shadow: 0 10px 35px rgba(233, 69, 96, 0.12); border-color: #e94560; }
@@ -66,15 +73,18 @@
         .manga-card .info .author strong { color: #e94560; font-weight: 600; }
         .manga-card .info .meta { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2a4a; }
         .manga-card .info .meta span { background: #252540; padding: 2px 12px; border-radius: 12px; }
+        
         .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
         .pagination button { padding: 10px 20px; border-radius: 30px; border: 1px solid #2a2a4a; background: transparent; color: #aaa; font-size: 14px; cursor: pointer; transition: all 0.3s; }
         .pagination button:hover:not(:disabled) { background: #2a2a4a; color: #fff; }
         .pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+        
         .footer { text-align: center; padding: 24px 15px; background: #1a1a2e; border-top: 1px solid #2a2a4a; margin-top: 20px; }
         .footer p { color: #555; font-size: 13px; }
         .footer a { color: #e94560; text-decoration: none; }
         .footer a:hover { text-decoration: underline; }
         .footer .footer-ads { padding: 12px 0 4px; }
+        
         @media (max-width: 768px) {
             .header { padding: 12px 16px; flex-direction: column; align-items: stretch; }
             .header .logo { font-size: 20px; text-align: center; }
@@ -180,50 +190,42 @@
     </div>
 </footer>
 
-<!-- ====== JAVASCRIPT ====== -->
+<!-- ============================================================
+     JAVASCRIPT - FINAL FIX
+     ============================================================ -->
 <script>
-    // ============================================================
-    // CONFIGURATION
-    // ============================================================
+    // ====== CONFIGURATION ======
     const WORKER_URL = 'https://mangaproxy.aidenwilliamson888.workers.dev';
-
     let currentQuery = '';
     let currentOffset = 0;
     const LIMIT = 30;
     let totalData = 0;
     let currentFilter = '';
 
-    // ============================================================
-    // GET COVER URL - FIXED
-    // ============================================================
+    // ====== GET COVER URL (LEWAT WORKER) ======
     function getCoverUrl(manga) {
         const coverRel = manga.relationships.find(r => r.type === 'cover_art');
         if (!coverRel) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
         const filename = coverRel.attributes?.fileName;
         if (!filename) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
-        return `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
+        const coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
+        return `${WORKER_URL}/${encodeURIComponent(coverUrl)}`;
     }
 
-    // ============================================================
-    // GET AUTHOR
-    // ============================================================
+    // ====== GET AUTHOR ======
     function getAuthor(manga) {
         const authorRel = manga.relationships.find(r => r.type === 'author');
         if (!authorRel) return 'Unknown';
         return authorRel.attributes?.name || 'Unknown';
     }
 
-    // ============================================================
-    // GET TITLE
-    // ============================================================
+    // ====== GET TITLE ======
     function getTitle(manga) {
         const titles = manga.attributes.title;
         return titles.en || Object.values(titles)[0] || 'No Title';
     }
 
-    // ============================================================
-    // GET STATUS
-    // ============================================================
+    // ====== GET STATUS ======
     function getStatus(manga) {
         const status = manga.attributes?.status || 'unknown';
         const map = {
@@ -236,9 +238,7 @@
         return map[status] || status;
     }
 
-    // ============================================================
-    // RENDER MANGA
-    // ============================================================
+    // ====== RENDER MANGA (CLEAN) ======
     function renderManga(data) {
         const grid = document.getElementById('mangaGrid');
         if (!data || data.length === 0) {
@@ -259,7 +259,7 @@
             const status = getStatus(manga);
 
             return `
-                <div class="manga-card" onclick="openManga('${manga.id}', '${encodeURIComponent(title)}')">
+                <div class="manga-card" onclick="openManga('${manga.id}')">
                     <img class="cover" src="${cover}" alt="${title}" loading="lazy" 
                          onerror="this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'">
                     <div class="info">
@@ -277,9 +277,7 @@
         document.getElementById('totalManga').textContent = data.length;
     }
 
-    // ============================================================
-    // FETCH MANGA VIA WORKER
-    // ============================================================
+    // ====== FETCH MANGA VIA WORKER ======
     async function fetchManga(query = '', offset = 0, genre = '') {
         const grid = document.getElementById('mangaGrid');
         grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>`;
@@ -315,19 +313,12 @@
             console.log('🔍 Fetching:', targetUrl);
 
             const response = await fetch(targetUrl);
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('❌ Response error:', response.status, errorText);
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const result = await response.json();
-            console.log('✅ Data:', result);
+            console.log('✅ Data received:', result);
 
-            if (result.errors) {
-                console.error('❌ MangaDex errors:', result.errors);
-                throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
-            }
+            if (result.errors) throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
 
             const validData = (result.data || []).filter(m => 
                 m.relationships && m.relationships.some(r => r.type === 'cover_art')
@@ -350,7 +341,7 @@
             updatePagination(offset);
 
         } catch (error) {
-            console.error('❌ Fetch error:', error);
+            console.error('❌ Error:', error);
             grid.innerHTML = `
                 <div class="loading" style="grid-column:1/-1;">
                     <p style="color:#e94560; font-size:18px;">❌ Failed to load data</p>
@@ -364,9 +355,7 @@
         }
     }
 
-    // ============================================================
-    // PAGINATION
-    // ============================================================
+    // ====== PAGINATION ======
     function updatePagination(offset) {
         const currentPage = Math.floor(offset / LIMIT) + 1;
         document.getElementById('pageInfo').textContent = `Page ${currentPage}`;
@@ -382,9 +371,7 @@
         window.scrollTo({ top: 300, behavior: 'smooth' });
     }
 
-    // ============================================================
-    // SEARCH & FILTER
-    // ============================================================
+    // ====== SEARCH & FILTER ======
     function searchManga() {
         const input = document.getElementById('searchInput');
         currentQuery = input.value.trim();
@@ -413,18 +400,14 @@
         fetchManga(currentQuery, 0, genre);
     }
 
-    // ============================================================
-    // CLICK MANGA - GANTI DENGAN LINK FAKE READER LO
-    // ============================================================
-    function openManga(id, title) {
-        // 🔥 Ganti dengan link fake reader / download lo
+    // ====== OPEN MANGA (GANTI DENGAN FAKE READER LO) ======
+    function openManga(id) {
+        // 🔥 GANTI DENGAN LINK FAKE READER LO
         // Contoh: window.location.href = `read.html?id=${id}`;
-        alert(`📖 Open Manga: ${decodeURIComponent(title)}\nID: ${id}\n\nReplace this function with your fake reader link!`);
+        alert(`📖 Open manga ID: ${id}\n\nReplace this function with your fake reader link!`);
     }
 
-    // ============================================================
-    // INITIAL LOAD
-    // ============================================================
+    // ====== INITIAL LOAD ======
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         const searchQuery = urlParams.get('search');
