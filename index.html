@@ -5,16 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MangaReader - Read Manga Online Free</title>
     
-    <meta name="description" content="Read manga online for free from MangaDx.">
-    <meta name="keywords" content="read manga, manga online, free manga, comic online, MangaDex">
+    <meta name="description" content="Read manga online for free from MangaDex.">
     <meta property="og:title" content="MangaReader - Read Manga Online Free">
-    <meta property="og:description" content="Read manga online for free from MangaDx. Complete collection of latest and most popular manga.">
-    <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- ====== ADS HEADER ====== -->
     <div style="text-align:center; padding:10px 0; background:#f8f9fa; border-bottom:2px solid #dee2e6;">
-        <!-- MASUKKAN KODE IKLAN HIGH CPM DI SINI -->
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
@@ -195,20 +191,31 @@
      ============================================================ -->
 <script>
     // ====== CONFIGURATION ======
-    const WORKER_URL = 'https://mangaproxy.aidenwilliamson888.workers.dev';
+    // 🔥 GANTI DENGAN URL WORKER BARU LO
+    const WORKER_URL = 'https://mangadxjibex.aidenwilliamson888.workers.dev';
     let currentQuery = '';
     let currentOffset = 0;
     const LIMIT = 30;
     let totalData = 0;
     let currentFilter = '';
 
-    // ====== GET COVER URL (LEWAT WORKER) ======
+    // ====== GET COVER URL (PASTIKAN .jpg) ======
     function getCoverUrl(manga) {
         const coverRel = manga.relationships.find(r => r.type === 'cover_art');
         if (!coverRel) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+        
         const filename = coverRel.attributes?.fileName;
         if (!filename) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
-        const coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
+        
+        // 🔥 BUILD URL COVER
+        let coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
+        
+        // 🔥 TAMBAHIN .jpg KALO GAK ADA
+        if (!coverUrl.endsWith('.jpg') && !coverUrl.endsWith('.png') && !coverUrl.endsWith('.jpeg')) {
+            coverUrl = coverUrl + '.jpg';
+        }
+        
+        // 🔥 LEWATIN WORKER
         return `${WORKER_URL}/${encodeURIComponent(coverUrl)}`;
     }
 
@@ -238,7 +245,7 @@
         return map[status] || status;
     }
 
-    // ====== RENDER MANGA (CLEAN) ======
+    // ====== RENDER MANGA ======
     function renderManga(data) {
         const grid = document.getElementById('mangaGrid');
         if (!data || data.length === 0) {
@@ -260,8 +267,11 @@
 
             return `
                 <div class="manga-card" onclick="openManga('${manga.id}')">
-                    <img class="cover" src="${cover}" alt="${title}" loading="lazy" 
-                         onerror="this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'">
+                    <img class="cover" 
+                         src="${cover}" 
+                         alt="${title}" 
+                         loading="lazy" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'">
                     <div class="info">
                         <div class="title">${title}</div>
                         <div class="author">By: <strong>${author}</strong></div>
@@ -400,11 +410,10 @@
         fetchManga(currentQuery, 0, genre);
     }
 
-    // ====== OPEN MANGA (GANTI DENGAN FAKE READER LO) ======
+    // ====== OPEN MANGA ======
     function openManga(id) {
         // 🔥 GANTI DENGAN LINK FAKE READER LO
-        // Contoh: window.location.href = `read.html?id=${id}`;
-        alert(`📖 Open manga ID: ${id}\n\nReplace this function with your fake reader link!`);
+        alert(`📖 Open manga ID: ${id}`);
     }
 
     // ====== INITIAL LOAD ======
