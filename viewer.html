@@ -254,8 +254,10 @@
 
     // ====== DOWNLOAD CHAPTER ======
     function downloadChapter(format) {
-        alert(`📥 Download Chapter ${chapterNum} (${format.toUpperCase()})\n\nReplace this function with your download link!`);
-    }
+    // 🔥 GANTI DENGAN LINK DOWNLOAD LO
+    const downloadUrl = `https://link-download-lo.com/chapter-${chapterNum}.${format}`;
+    window.open(downloadUrl, '_blank');
+}
 
     // ====== NAVIGASI CHAPTER ======
     function navigateChapter(direction) {
