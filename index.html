@@ -187,11 +187,11 @@
 </footer>
 
 <!-- ============================================================
-     JAVASCRIPT - FINAL FIX
+     JAVASCRIPT - PAKE WSRV.NL UNTUK COVER
      ============================================================ -->
 <script>
     // ====== CONFIGURATION ======
-    // 🔥 GANTI DENGAN URL WORKER BARU LO
+    // 🔥 WORKER LO (buat API manga)
     const WORKER_URL = 'https://mangadxjibex.aidenwilliamson888.workers.dev';
     let currentQuery = '';
     let currentOffset = 0;
@@ -199,33 +199,20 @@
     let totalData = 0;
     let currentFilter = '';
 
-    // ====== GET COVER URL ======
-function getCoverUrl(manga) {
-    const coverRel = manga.relationships.find(r => r.type === 'cover_art');
-    if (!coverRel) {
-        console.warn('⚠️ No cover_art relationship for manga:', manga.id);
-        return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+    // ====== GET COVER URL (PAKE WSRV.NL) ======
+    function getCoverUrl(manga) {
+        const coverRel = manga.relationships.find(r => r.type === 'cover_art');
+        if (!coverRel) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+        
+        const filename = coverRel.attributes?.fileName;
+        if (!filename) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+        
+        // 🔥 BUILD URL COVER ASLI
+        const coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
+        
+        // 🔥 LEWATIN WSRV.NL (IMAGE PROXY GRATIS)
+        return `https://wsrv.nl/?url=${encodeURIComponent(coverUrl)}&w=400&h=600&fit=cover&output=jpg`;
     }
-    
-    const filename = coverRel.attributes?.fileName;
-    if (!filename) {
-        console.warn('⚠️ No filename for cover:', manga.id);
-        return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
-    }
-    
-    // 🔥 BUILD URL COVER
-    let coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
-    
-    // 🔥 PASTIKAN .jpg
-    if (!coverUrl.endsWith('.jpg') && !coverUrl.endsWith('.png') && !coverUrl.endsWith('.jpeg')) {
-        coverUrl = coverUrl + '.jpg';
-    }
-    
-    // 🔥 LEWATIN WORKER
-    const finalUrl = `${WORKER_URL}/${encodeURIComponent(coverUrl)}`;
-    console.log('🔍 Cover URL:', finalUrl); // 🔥 LOG BUAT DEBUG
-    return finalUrl;
-}
 
     // ====== GET AUTHOR ======
     function getAuthor(manga) {
@@ -276,12 +263,10 @@ function getCoverUrl(manga) {
             return `
                 <div class="manga-card" onclick="openManga('${manga.id}')">
                     <img class="cover" 
-     src="${cover}" 
-     alt="${title}" 
-     loading="lazy" 
-     crossorigin="anonymous"
-     referrerpolicy="no-referrer"
-     onerror="this.onerror=null; this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'; console.error('❌ Image load error:', '${cover}')">
+                         src="${cover}" 
+                         alt="${title}" 
+                         loading="lazy" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'">
                     <div class="info">
                         <div class="title">${title}</div>
                         <div class="author">By: <strong>${author}</strong></div>
@@ -304,16 +289,17 @@ function getCoverUrl(manga) {
 
         try {
             const params = new URLSearchParams();
-            params.append('limit', LIMIT.toString());
-            params.append('offset', offset.toString());
-            params.append('includes[]', 'cover_art');
-            params.append('includes[]', 'author');
-            params.append('order[latestUploadedChapter]', 'desc');
-            
-            ['safe', 'suggestive', 'erotica'].forEach(r => params.append('contentRating[]', r));
-            params.append('availableTranslatedLanguage[]', 'en');
+            params.set('limit', LIMIT.toString());
+            params.set('offset', offset.toString());
+            params.set('order[latestUploadedChapter]', 'desc');
+            params.set('availableTranslatedLanguage[]', 'en');
+            params.set('contentRating[]', 'safe');
+            params.set('contentRating[]', 'suggestive');
+            params.set('contentRating[]', 'erotica');
+            params.set('includes[]', 'cover_art');
+            params.set('includes[]', 'author');
 
-            if (query && query.trim()) params.append('title', query.trim());
+            if (query && query.trim()) params.set('title', query.trim());
 
             if (genre) {
                 const genreMap = {
@@ -326,7 +312,7 @@ function getCoverUrl(manga) {
                     'fantasy': 'cdc7a9f7-3b5a-4e9f-8b3a-9e6f5b3a7c1e'
                 };
                 const tagId = genreMap[genre.toLowerCase()];
-                if (tagId) params.append('includedTags[]', tagId);
+                if (tagId) params.set('includedTags[]', tagId);
             }
 
             const targetUrl = `${WORKER_URL}/https://api.mangadex.org/manga?${params.toString()}`;
@@ -422,7 +408,6 @@ function getCoverUrl(manga) {
 
     // ====== OPEN MANGA ======
     function openManga(id) {
-        // 🔥 GANTI DENGAN LINK FAKE READER LO
         alert(`📖 Open manga ID: ${id}`);
     }
 
