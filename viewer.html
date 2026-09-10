@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Chapter - MangaReader</title>
+
+    <!-- ADS HEADER -->
+    <div style="text-align:center; padding:10px 0; background:#f8f9fa; border-bottom:2px solid #dee2e6;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d0d0d; color: #fff; line-height: 1.6; min-height: 100vh; }
+        a { text-decoration: none; color: inherit; }
+
+        .header { background: #1a1a2e; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e94560; position: sticky; top: 0; z-index: 999; flex-wrap: wrap; gap: 12px; }
+        .header .logo { font-size: 20px; font-weight: 800; color: #fff; cursor: pointer; }
+        .header .logo span { color: #e94560; }
+        .header .nav { display: flex; gap: 12px; align-items: center; }
+        .header .nav a { color: #aaa; font-size: 13px; padding: 6px 16px; border: 1px solid #2a2a4a; border-radius: 30px; transition: all 0.3s; }
+        .header .nav a:hover { border-color: #e94560; color: #e94560; }
+
+        .ads-sticky { background: #1a1a2e; padding: 12px 10px; text-align: center; border-bottom: 1px solid #2a2a4a; min-height: 80px; }
+        .ads-sticky .ad-label, .ads-inarticle .ad-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px 15px 60px; }
+
+        /* CHAPTER INFO */
+        .chapter-info { background: #1a1a2e; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; border: 1px solid #2a2a4a; }
+        .chapter-info h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+        .chapter-info .sub { font-size: 14px; color: #888; }
+
+        /* PAGE VIEWER (TANPA GAMBAR) */
+        .page-viewer { background: #1a1a2e; border-radius: 12px; padding: 30px 24px; margin-bottom: 20px; border: 1px solid #2a2a4a; text-align: center; min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .page-viewer .page-icon { font-size: 80px; margin-bottom: 20px; opacity: 0.3; }
+        .page-viewer h2 { font-size: 20px; margin-bottom: 10px; color: #fff; }
+        .page-viewer p { color: #888; font-size: 14px; max-width: 500px; }
+        .page-viewer .placeholder-box { background: #12121f; border: 2px dashed #2a2a4a; border-radius: 12px; padding: 60px 40px; margin: 20px 0; width: 100%; max-width: 500px; }
+
+        /* NAVIGASI */
+        .chapter-nav { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+        .chapter-nav button { flex: 1; padding: 14px; border-radius: 8px; border: 1px solid #2a2a4a; background: #1a1a2e; color: #fff; font-weight: 700; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+        .chapter-nav button:hover:not(:disabled) { border-color: #e94560; color: #e94560; }
+        .chapter-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* DOWNLOAD BOX */
+        .download-box { background: #1a1a2e; border-radius: 12px; padding: 24px; margin-bottom: 20px; border: 1px solid #2a2a4a; text-align: center; }
+        .download-box h3 { font-size: 18px; margin-bottom: 16px; color: #fff; }
+        .btn-download { display: inline-block; padding: 14px 40px; border-radius: 50px; font-weight: 700; font-size: 16px; text-decoration: none; background: linear-gradient(135deg, #d62828, #a01a1a); color: #fff; transition: all 0.3s; border: none; cursor: pointer; margin: 6px; }
+        .btn-download:hover { transform: scale(1.03); box-shadow: 0 6px 25px rgba(233, 69, 96, 0.3); }
+        .btn-download.epub { background: linear-gradient(135deg, #6c5b7b, #4a3a5a); }
+        .btn-download.cbz { background: linear-gradient(135deg, #2d6a4f, #1a4a3a); }
+
+        .ads-inarticle { background: #1a1a2e; padding: 18px 10px; margin: 22px 0; text-align: center; border-radius: 10px; border: 1px solid #2a2a4a; min-height: 90px; }
+
+        .loading { text-align: center; padding: 60px 0; color: #888; }
+        .loading .spinner { display: inline-block; width: 44px; height: 44px; border: 4px solid #2a2a4a; border-top: 4px solid #e94560; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .footer { text-align: center; padding: 24px 15px; background: #1a1a2e; border-top: 1px solid #2a2a4a; margin-top: 20px; }
+        .footer p { color: #555; font-size: 13px; }
+        .footer a { color: #e94560; }
+
+        @media (max-width: 768px) {
+            .chapter-info h1 { font-size: 18px; }
+            .page-viewer { padding: 20px 16px; min-height: 300px; }
+            .page-viewer .page-icon { font-size: 60px; }
+            .chapter-nav button { padding: 12px; font-size: 13px; }
+            .btn-download { display: block; margin: 8px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo" onclick="window.location.href='index.html'">📖 <span>Manga</span>Reader</div>
+    <div class="nav">
+        <a href="index.html">🏠 Home</a>
+        <a href="read.html?id=${mangaId}" id="backToManga">📚 Chapters</a>
+    </div>
+</header>
+
+<div class="ads-sticky">
+    <div class="ad-label">— Advertisement —</div>
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="container">
+
+    <div class="ads-inarticle">
+        <div class="ad-label">— Advertisement —</div>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- CHAPTER INFO -->
+    <div id="chapterInfo" class="chapter-info">
+        <div class="loading"><div class="spinner"></div><p>Loading chapter...</p></div>
+    </div>
+
+    <!-- PAGE VIEWER (PLACEHOLDER) -->
+    <div class="page-viewer">
+        <div class="page-icon">📄</div>
+        <h2>Reading Mode</h2>
+        <p>Halaman manga akan ditampilkan di sini.</p>
+        <div class="placeholder-box">
+            <p style="color:#555; font-size:14px;">📖 Chapter Content</p>
+            <p style="color:#444; font-size:12px; margin-top:8px;">Content placeholder — halaman manga</p>
+        </div>
+    </div>
+
+    <!-- ADS IN-ARTICLE -->
+    <div class="ads-inarticle">
+        <div class="ad-label">— Advertisement —</div>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- NAVIGASI CHAPTER -->
+    <div class="chapter-nav">
+        <button id="prevCh" onclick="navigateChapter('prev')" disabled>◀ Previous Chapter</button>
+        <button id="nextCh" onclick="navigateChapter('next')" disabled>Next Chapter ▶</button>
+    </div>
+
+    <!-- DOWNLOAD BOX -->
+    <div class="download-box">
+        <h3>📥 Download Chapter</h3>
+        <p style="color:#888; font-size:13px; margin-bottom:16px;">Download chapter ini dalam berbagai format</p>
+        <button class="btn-download" onclick="downloadChapter('pdf')">📄 PDF</button>
+        <button class="btn-download epub" onclick="downloadChapter('epub')">📖 EPUB</button>
+        <button class="btn-download cbz" onclick="downloadChapter('cbz')">📦 CBZ</button>
+    </div>
+
+    <!-- ADS BOTTOM -->
+    <div class="ads-inarticle">
+        <div class="ad-label">— Advertisement —</div>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+</div>
+
+<footer class="footer">
+    <p>© 2024 <a href="index.html">MangaReader</a> · Data from MangaDex</p>
+</footer>
+
+<script>
+    // ====== CONFIGURATION ======
+    const WORKER_URL = 'https://mangadxjibex.aidenwilliamson888.workers.dev';
+    const MANGADEX_API = 'https://api.mangadex.org';
+
+    // ====== GET PARAMS ======
+    const urlParams = new URLSearchParams(window.location.search);
+    const chapterId = urlParams.get('chapter');
+    const mangaId = urlParams.get('manga');
+    const chapterNum = urlParams.get('num') || '?';
+
+    // Update link "Back to Chapters"
+    if (mangaId) {
+        document.getElementById('backToManga').href = `read.html?id=${mangaId}`;
+    }
+
+    // ====== RENDER CHAPTER INFO ======
+    function renderChapterInfo(chapter) {
+        const info = document.getElementById('chapterInfo');
+        const title = chapter.attributes?.title || `Chapter ${chapter.attributes?.chapter || '?'}`;
+        const chNum = chapter.attributes?.chapter || '?';
+        const lang = chapter.attributes?.translatedLanguage || 'en';
+        const pages = chapter.attributes?.pages || 0;
+        const publishAt = chapter.attributes?.publishAt ? new Date(chapter.attributes.publishAt).toLocaleDateString() : 'N/A';
+
+        info.innerHTML = `
+            <h1>📖 Chapter ${chNum} — ${title}</h1>
+            <div class="sub">🌐 ${lang.toUpperCase()} · 📄 ${pages} pages · 📅 ${publishAt}</div>
+        `;
+    }
+
+    // ====== FETCH CHAPTER INFO ======
+    async function fetchChapterInfo() {
+        if (!chapterId) {
+            document.getElementById('chapterInfo').innerHTML = `
+                <p style="color:#e94560;">❌ No chapter ID provided.</p>
+            `;
+            return;
+        }
+
+        try {
+            const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/chapter/${chapterId}`)}`;
+            console.log('🔍 Fetching chapter:', targetUrl);
+
+            const response = await fetch(targetUrl);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const result = await response.json();
+            if (!result.data) throw new Error('Chapter not found');
+
+            renderChapterInfo(result.data);
+
+        } catch (error) {
+            console.error('❌ Error:', error);
+            document.getElementById('chapterInfo').innerHTML = `
+                <p style="color:#e94560;">❌ Failed to load chapter</p>
+                <p style="color:#666; font-size:14px;">${error.message}</p>
+            `;
+        }
+    }
+
+    // ====== DOWNLOAD CHAPTER ======
+    function downloadChapter(format) {
+        // 🔥 Ganti dengan link download fake lo
+        alert(`📥 Download Chapter ${chapterNum} (${format.toUpperCase()})\n\nReplace this function with your download link!`);
+        // window.open(`https://yourdomain.com/download/chapter-${chapterNum}.${format}`, '_blank');
+    }
+
+    // ====== NAVIGASI CHAPTER ======
+    function navigateChapter(direction) {
+        // 🔥 Ganti dengan logic navigasi chapter lo
+        alert(`Navigate to ${direction} chapter\n\nReplace this function with your navigation logic!`);
+    }
+
+    // ====== INITIAL LOAD ======
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchChapterInfo();
+    });
+</script>
+
+</body>
+</html>
