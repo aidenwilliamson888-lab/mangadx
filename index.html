@@ -195,10 +195,18 @@
     let totalData = 0;
 
     // ====== GET COVER URL ======
-    function getCoverUrl(item) {
-        // Komiku API biasanya ngasih field 'thumbnail' atau 'image'
-        return item.thumbnail || item.image || 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+    function getCoverUrl(manga) {
+    const coverRel = manga.relationships.find(r => r.type === 'cover_art');
+    if (!coverRel) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+    const filename = coverRel.attributes?.fileName;
+    if (!filename) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
+    
+    let coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
+    if (!coverUrl.endsWith('.jpg') && !coverUrl.endsWith('.png') && !coverUrl.endsWith('.jpeg')) {
+        coverUrl += '.jpg';
     }
+    return `${WORKER_URL}/${encodeURIComponent(coverUrl)}`;
+}
 
     // ====== GET TITLE ======
     function getTitle(item) {
@@ -245,10 +253,11 @@
             return `
                 <div class="manga-card" onclick="openManga('${slug}')">
                     <img class="cover" 
-                         src="${cover}" 
-                         alt="${title}" 
-                         loading="lazy" 
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'">
+     src="${cover}" 
+     alt="${title}" 
+     loading="lazy" 
+     referrerpolicy="no-referrer"
+     onerror="this.onerror=null; this.src='https://via.placeholder.com/400x600/1a1a2e/444?text=Error'">
                     <div class="info">
                         <div class="title">${title}</div>
                         <div class="author">By: <strong>${author}</strong></div>
