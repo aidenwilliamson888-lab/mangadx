@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MangaReader - Read Manga Online Free</title>
     
-    <meta name="description" content="Read manga online for free from MangaDex.">
+    <meta name="description" content="Read manga online for free.">
     <meta property="og:title" content="MangaReader - Read Manga Online Free">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -151,13 +151,8 @@
 
     <div class="filter-chips" id="filterChips">
         <span class="chip active" data-filter="" onclick="applyFilter(this, '')">🔥 All</span>
-        <span class="chip" data-filter="shounen" onclick="applyFilter(this, 'shounen')">⚔️ Shounen</span>
-        <span class="chip" data-filter="shoujo" onclick="applyFilter(this, 'shoujo')">🌸 Shoujo</span>
-        <span class="chip" data-filter="seinen" onclick="applyFilter(this, 'seinen')">🎯 Seinen</span>
-        <span class="chip" data-filter="isekai" onclick="applyFilter(this, 'isekai')">🌍 Isekai</span>
-        <span class="chip" data-filter="comedy" onclick="applyFilter(this, 'comedy')">😂 Comedy</span>
-        <span class="chip" data-filter="romance" onclick="applyFilter(this, 'romance')">❤️ Romance</span>
-        <span class="chip" data-filter="fantasy" onclick="applyFilter(this, 'fantasy')">🐉 Fantasy</span>
+        <span class="chip" data-filter="terbaru" onclick="applyFilter(this, 'terbaru')">🆕 Latest</span>
+        <span class="chip" data-filter="populer" onclick="applyFilter(this, 'populer')">🔥 Popular</span>
     </div>
 
     <div id="mangaGrid" class="manga-grid">
@@ -179,7 +174,7 @@
 
 <!-- ====== FOOTER ====== -->
 <footer class="footer">
-    <p>© <?php echo date('Y'); ?> <a href="#">MangaReader</a> · Data from <a href="https://mangadex.org" target="_blank">MangaDex</a></p>
+    <p>© <?php echo date('Y'); ?> <a href="#">MangaReader</a> · Data from <a href="https://komiku.com" target="_blank">Komiku</a></p>
     <div class="footer-ads">
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxx" data-ad-slot="xxxx" data-ad-format="auto"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -187,57 +182,44 @@
 </footer>
 
 <!-- ============================================================
-     JAVASCRIPT - PAKE WSRV.NL UNTUK COVER
+     JAVASCRIPT - PAKE KOMIKU REST API (NO WORKER NEEDED!)
      ============================================================ -->
 <script>
     // ====== CONFIGURATION ======
-    // 🔥 WORKER LO (buat API manga)
-    const WORKER_URL = 'https://mangadxjibex.aidenwilliamson888.workers.dev';
+    // 🔥 PAKE KOMIKU REST API - LANGSUNG JALAN, NO WORKER!
+    const API_BASE = 'https://komiku-rest-api.vercel.app';
+    
     let currentQuery = '';
-    let currentOffset = 0;
-    const LIMIT = 30;
+    let currentPage = 1;
+    let currentFilter = 'terbaru';
     let totalData = 0;
-    let currentFilter = '';
 
-    // ====== GET COVER URL (PAKE WSRV.NL) ======
-    function getCoverUrl(manga) {
-        const coverRel = manga.relationships.find(r => r.type === 'cover_art');
-        if (!coverRel) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
-        
-        const filename = coverRel.attributes?.fileName;
-        if (!filename) return 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
-        
-        // 🔥 BUILD URL COVER ASLI
-        const coverUrl = `https://uploads.mangadex.org/covers/${manga.id}/${filename}`;
-        
-        // 🔥 LEWATIN WSRV.NL (IMAGE PROXY GRATIS)
-        return `https://wsrv.nl/?url=${encodeURIComponent(coverUrl)}&w=400&h=600&fit=cover&output=jpg`;
-    }
-
-    // ====== GET AUTHOR ======
-    function getAuthor(manga) {
-        const authorRel = manga.relationships.find(r => r.type === 'author');
-        if (!authorRel) return 'Unknown';
-        return authorRel.attributes?.name || 'Unknown';
+    // ====== GET COVER URL ======
+    function getCoverUrl(item) {
+        // Komiku API biasanya ngasih field 'thumbnail' atau 'image'
+        return item.thumbnail || item.image || 'https://via.placeholder.com/400x600/1a1a2e/444?text=No+Cover';
     }
 
     // ====== GET TITLE ======
-    function getTitle(manga) {
-        const titles = manga.attributes.title;
-        return titles.en || Object.values(titles)[0] || 'No Title';
+    function getTitle(item) {
+        return item.title || item.judul || 'No Title';
+    }
+
+    // ====== GET AUTHOR ======
+    function getAuthor(item) {
+        return item.author || item.penulis || 'Unknown';
     }
 
     // ====== GET STATUS ======
-    function getStatus(manga) {
-        const status = manga.attributes?.status || 'unknown';
+    function getStatus(item) {
+        const status = item.status || 'unknown';
         const map = {
             'completed': '✅ Completed',
             'ongoing': '🔄 Ongoing',
             'hiatus': '⏸️ Hiatus',
-            'cancelled': '❌ Cancelled',
-            'unknown': '❓ Unknown'
+            'cancelled': '❌ Cancelled'
         };
-        return map[status] || status;
+        return map[status?.toLowerCase()] || status;
     }
 
     // ====== RENDER MANGA ======
@@ -253,15 +235,15 @@
             return;
         }
 
-        grid.innerHTML = data.map(manga => {
-            const title = getTitle(manga);
-            const author = getAuthor(manga);
-            const cover = getCoverUrl(manga);
-            const chapters = manga.attributes?.lastChapter || '?';
-            const status = getStatus(manga);
+        grid.innerHTML = data.map(item => {
+            const title = getTitle(item);
+            const author = getAuthor(item);
+            const cover = getCoverUrl(item);
+            const status = getStatus(item);
+            const slug = item.slug || item.id || '';
 
             return `
-                <div class="manga-card" onclick="openManga('${manga.id}')">
+                <div class="manga-card" onclick="openManga('${slug}')">
                     <img class="cover" 
                          src="${cover}" 
                          alt="${title}" 
@@ -271,7 +253,6 @@
                         <div class="title">${title}</div>
                         <div class="author">By: <strong>${author}</strong></div>
                         <div class="meta">
-                            <span>📄 Ch. ${chapters}</span>
                             <span>${status}</span>
                         </div>
                     </div>
@@ -282,69 +263,58 @@
         document.getElementById('totalManga').textContent = data.length;
     }
 
-    // ====== FETCH MANGA VIA WORKER ======
-    async function fetchManga(query = '', offset = 0, genre = '') {
+    // ====== FETCH MANGA DARI KOMIKU API ======
+    async function fetchManga(query = '', page = 1, filter = 'terbaru') {
         const grid = document.getElementById('mangaGrid');
         grid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading manga...</p></div>`;
 
         try {
-            const params = new URLSearchParams();
-            params.set('limit', LIMIT.toString());
-            params.set('offset', offset.toString());
-            params.set('order[latestUploadedChapter]', 'desc');
-            params.set('availableTranslatedLanguage[]', 'en');
-            params.set('contentRating[]', 'safe');
-            params.set('contentRating[]', 'suggestive');
-            params.set('contentRating[]', 'erotica');
-            params.set('includes[]', 'cover_art');
-            params.set('includes[]', 'author');
-
-            if (query && query.trim()) params.set('title', query.trim());
-
-            if (genre) {
-                const genreMap = {
-                    'shounen': '0e159c0a-1c3a-4e87-9b78-d3c5b3e5f9b2',
-                    'shoujo': 'b5a841c2-e71c-44f4-868c-1a2e9b6f7a3c',
-                    'seinen': '1f1b6b4f-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
-                    'isekai': 'a7f2c8b1-9e4d-4f5e-9b8a-7c3d5e9f1b2a',
-                    'comedy': '4d32cc48-9f00-4e8a-8c9a-1e3f5b7d9a1c',
-                    'romance': '423e2eae-5e9e-4e9f-8b3a-9e6f5b3a7c1e',
-                    'fantasy': 'cdc7a9f7-3b5a-4e9f-8b3a-9e6f5b3a7c1e'
-                };
-                const tagId = genreMap[genre.toLowerCase()];
-                if (tagId) params.set('includedTags[]', tagId);
+            let url;
+            
+            if (query && query.trim()) {
+                // Search
+                url = `${API_BASE}/search?q=${encodeURIComponent(query.trim())}`;
+            } else if (filter === 'populer') {
+                // Popular
+                url = `${API_BASE}/komik-populer`;
+            } else {
+                // Latest (default)
+                url = `${API_BASE}/terbaru`;
             }
 
-            const targetUrl = `${WORKER_URL}/https://api.mangadex.org/manga?${params.toString()}`;
-            console.log('🔍 Fetching:', targetUrl);
+            console.log('🔍 Fetching:', url);
 
-            const response = await fetch(targetUrl);
+            const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const result = await response.json();
             console.log('✅ Data received:', result);
 
-            if (result.errors) throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
-
-            const validData = (result.data || []).filter(m => 
-                m.relationships && m.relationships.some(r => r.type === 'cover_art')
-            );
-
-            totalData = result.total || validData.length || 0;
-
-            if (validData.length === 0) {
-                grid.innerHTML = `
-                    <div class="loading" style="grid-column:1/-1;">
-                        <p style="color:#888; font-size:18px;">😕 No manga found</p>
-                        <button onclick="resetSearch()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Reset</button>
-                    </div>
-                `;
-                updatePagination(offset);
-                return;
+            // Handle berbagai format response
+            let mangaList = [];
+            if (Array.isArray(result)) {
+                mangaList = result;
+            } else if (result.data && Array.isArray(result.data)) {
+                mangaList = result.data;
+            } else if (result.results && Array.isArray(result.results)) {
+                mangaList = result.results;
+            } else if (result.manga && Array.isArray(result.manga)) {
+                mangaList = result.manga;
+            } else if (typeof result === 'object') {
+                // Kalo object, coba cari array di dalamnya
+                for (const key in result) {
+                    if (Array.isArray(result[key])) {
+                        mangaList = result[key];
+                        break;
+                    }
+                }
             }
 
-            renderManga(validData);
-            updatePagination(offset);
+            console.log('📚 Manga list:', mangaList.length);
+
+            totalData = mangaList.length;
+            renderManga(mangaList);
+            updatePagination(page);
 
         } catch (error) {
             console.error('❌ Error:', error);
@@ -352,7 +322,7 @@
                 <div class="loading" style="grid-column:1/-1;">
                     <p style="color:#e94560; font-size:18px;">❌ Failed to load data</p>
                     <p style="color:#666; font-size:14px; margin-top:6px;">${error.message}</p>
-                    <button onclick="fetchManga('${query}', 0, '${genre}')" 
+                    <button onclick="fetchManga('${query}', 1, '${filter}')" 
                             style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:14px;">
                         🔄 Try Again
                     </button>
@@ -362,18 +332,17 @@
     }
 
     // ====== PAGINATION ======
-    function updatePagination(offset) {
-        const currentPage = Math.floor(offset / LIMIT) + 1;
-        document.getElementById('pageInfo').textContent = `Page ${currentPage}`;
-        document.getElementById('prevPage').disabled = (offset === 0);
-        document.getElementById('nextPage').disabled = (offset + LIMIT >= totalData);
+    function updatePagination(page) {
+        document.getElementById('pageInfo').textContent = `Page ${page}`;
+        document.getElementById('prevPage').disabled = (page <= 1);
+        document.getElementById('nextPage').disabled = (page >= 10);
     }
 
     function changePage(direction) {
-        const newOffset = currentOffset + (direction * LIMIT);
-        if (newOffset < 0) return;
-        currentOffset = newOffset;
-        fetchManga(currentQuery, currentOffset, currentFilter);
+        const newPage = currentPage + direction;
+        if (newPage < 1) return;
+        currentPage = newPage;
+        fetchManga(currentQuery, currentPage, currentFilter);
         window.scrollTo({ top: 300, behavior: 'smooth' });
     }
 
@@ -381,34 +350,36 @@
     function searchManga() {
         const input = document.getElementById('searchInput');
         currentQuery = input.value.trim();
-        currentOffset = 0;
-        document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
-        document.querySelector('.filter-chips .chip[data-filter=""]')?.classList.add('active');
+        currentPage = 1;
         currentFilter = '';
-        fetchManga(currentQuery, 0, '');
+        document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
+        fetchManga(currentQuery, 1, '');
     }
 
     function resetSearch() {
         document.getElementById('searchInput').value = '';
         currentQuery = '';
-        currentOffset = 0;
-        currentFilter = '';
+        currentPage = 1;
+        currentFilter = 'terbaru';
         document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
         document.querySelector('.filter-chips .chip[data-filter=""]')?.classList.add('active');
-        fetchManga('', 0, '');
+        fetchManga('', 1, 'terbaru');
     }
 
-    function applyFilter(element, genre) {
+    function applyFilter(element, filter) {
         document.querySelectorAll('.filter-chips .chip').forEach(c => c.classList.remove('active'));
         element.classList.add('active');
-        currentFilter = genre;
-        currentOffset = 0;
-        fetchManga(currentQuery, 0, genre);
+        currentFilter = filter || 'terbaru';
+        currentQuery = '';
+        currentPage = 1;
+        fetchManga('', 1, currentFilter);
     }
 
     // ====== OPEN MANGA ======
-    function openManga(id) {
-        alert(`📖 Open manga ID: ${id}`);
+    function openManga(slug) {
+        // 🔥 GANTI DENGAN LINK FAKE READER LO
+        // Contoh: window.location.href = `/read.html?slug=${slug}`;
+        alert(`📖 Open manga: ${slug}\n\nReplace this function with your reader link!`);
     }
 
     // ====== INITIAL LOAD ======
@@ -418,9 +389,9 @@
         if (searchQuery) {
             document.getElementById('searchInput').value = searchQuery;
             currentQuery = searchQuery;
-            fetchManga(searchQuery, 0, '');
+            fetchManga(searchQuery, 1, '');
         } else {
-            fetchManga('', 0, '');
+            fetchManga('', 1, 'terbaru');
         }
     });
 </script>
