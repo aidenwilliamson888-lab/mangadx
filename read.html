@@ -243,35 +243,51 @@
     }
 
     // ====== FETCH CHAPTERS ======
-    async function fetchChapters() {
-        try {
-            const params = new URLSearchParams();
-            params.set('limit', '100');
-            params.set('order[chapter]', 'desc');
-            params.set('contentRating[]', 'safe');
-            params.set('contentRating[]', 'suggestive');
-            params.set('translatedLanguage[]', 'en');
+async function fetchChapters() {
+    try {
+        // 🔥 PARAMETER YANG BENER
+        const params = new URLSearchParams();
+        params.set('limit', '500');           // Max chapter
+        params.set('offset', '0');
+        params.set('order[chapter]', 'desc');
+        params.set('order[volume]', 'desc');
+        params.set('contentRating[]', 'safe');
+        params.set('contentRating[]', 'suggestive');
+        params.set('contentRating[]', 'erotica');
+        params.set('includes[]', 'scanlation_group');
+        params.set('includes[]', 'user');
+        
+        // 🔥 JANGAN FILTER BAHASA DULU - biar keliatan semua chapter
+        // params.set('translatedLanguage[]', 'en');
 
-            const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}/feed?${params.toString()}`)}`;
-            console.log('🔍 Fetching chapters:', targetUrl);
+        const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}/feed?${params.toString()}`)}`;
+        console.log('🔍 Fetching chapters:', targetUrl);
 
-            const response = await fetch(targetUrl);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(targetUrl);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            const result = await response.json();
-            const chapters = result.data || [];
+        const result = await response.json();
+        console.log('✅ Chapters data:', result);
 
-            renderChapters(chapters);
-
-        } catch (error) {
-            console.error('❌ Error:', error);
-            document.getElementById('chapterList').style.display = 'block';
-            document.getElementById('chapterItems').innerHTML = `
-                <p style="color:#e94560;">❌ Failed to load chapters</p>
-                <p style="color:#666; font-size:14px;">${error.message}</p>
-            `;
+        if (result.errors) {
+            throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
         }
+
+        const chapters = result.data || [];
+        console.log('📚 Total chapters:', chapters.length);
+
+        renderChapters(chapters);
+
+    } catch (error) {
+        console.error('❌ Error:', error);
+        document.getElementById('chapterList').style.display = 'block';
+        document.getElementById('chapterItems').innerHTML = `
+            <p style="color:#e94560;">❌ Failed to load chapters</p>
+            <p style="color:#666; font-size:14px;">${error.message}</p>
+            <button onclick="fetchChapters()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Try Again</button>
+        `;
     }
+}
 
     // ====== OPEN CHAPTER → REDIRECT KE VIEWER ======
 function openChapter(chapterId, chapterNum) {
