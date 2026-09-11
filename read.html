@@ -305,28 +305,59 @@
 
     // ====== RENDER MANGA INFO ======
     function renderMangaInfo(manga) {
-        const info = document.getElementById('mangaInfo');
-        const title = getTitle(manga);
-        const desc = getDescription(manga);
-        const author = getAuthor(manga);
-        const status = getStatus(manga);
-        const year = manga.attributes?.year || 'N/A';
-        const tags = (manga.attributes?.tags || [])
-            .map(t => t.attributes?.name?.en)
-            .filter(Boolean)
-            .slice(0, 5);
-
-        info.innerHTML = `
-            <h1>${title}</h1>
-            <div class="desc">${desc}</div>
-            <div class="meta">
-                <span>✍️ ${author}</span>
-                <span>📅 ${year}</span>
-                <span>${status}</span>
-                ${tags.map(t => `<span>🏷️ ${t}</span>`).join('')}
-            </div>
-        `;
+    const info = document.getElementById('mangaInfo');
+    const title = getTitle(manga);
+    const desc = getDescription(manga);
+    
+    // 🔥 SET TITLE DINAMIS
+    document.title = `Reading ${title} - MangaReader`;
+    
+    // 🔥 SET META DESCRIPTION DINAMIS
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.name = 'description';
+        document.head.appendChild(metaDesc);
     }
+    metaDesc.content = `Read ${title} manga online for free. ${desc.substring(0, 150)}...`;
+    
+    // 🔥 SET OG TITLE (buat social media)
+    let ogTitle = document.querySelector('meta[property="og:title"]');
+    if (!ogTitle) {
+        ogTitle = document.createElement('meta');
+        ogTitle.setAttribute('property', 'og:title');
+        document.head.appendChild(ogTitle);
+    }
+    ogTitle.content = `Reading ${title} - MangaReader`;
+    
+    // 🔥 SET OG DESCRIPTION
+    let ogDesc = document.querySelector('meta[property="og:description"]');
+    if (!ogDesc) {
+        ogDesc = document.createElement('meta');
+        ogDesc.setAttribute('property', 'og:description');
+        document.head.appendChild(ogDesc);
+    }
+    ogDesc.content = `Read ${title} manga online for free.`;
+    
+    const author = getAuthor(manga);
+    const status = getStatus(manga);
+    const year = manga.attributes?.year || 'N/A';
+    const tags = (manga.attributes?.tags || [])
+        .map(t => t.attributes?.name?.en)
+        .filter(Boolean)
+        .slice(0, 5);
+
+    info.innerHTML = `
+        <h1>${title}</h1>
+        <div class="desc">${desc}</div>
+        <div class="meta">
+            <span>✍️ ${author}</span>
+            <span>📅 ${year}</span>
+            <span>${status}</span>
+            ${tags.map(t => `<span>🏷️ ${t}</span>`).join('')}
+        </div>
+    `;
+}
 
     // ====== RENDER CHAPTERS (GROUPED + BENDERA ASLI) ======
     function renderChapters(chapters) {
