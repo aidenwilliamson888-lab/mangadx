@@ -282,43 +282,26 @@ async function fetchMangaInfo() {
     // ====== FETCH CHAPTERS ======
 async function fetchChapters() {
     try {
-        // 🔥 PARAMETER YANG BENER
+        // 🔥 ENDPOINT ALTERNATIF: /manga/{id}/feed dengan parameter minimal
         const params = new URLSearchParams();
-        params.set('limit', '500');           // Max chapter
-        params.set('offset', '0');
+        params.set('limit', '500');
         params.set('order[chapter]', 'desc');
-        params.set('order[volume]', 'desc');
-        params.set('contentRating[]', 'safe');
-        params.set('contentRating[]', 'suggestive');
-        params.set('contentRating[]', 'erotica');
-        
-        // 🔥 HAPUS FILTER BAHASA - biar semua chapter muncul
 
         const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}/feed?${params.toString()}`)}`;
-        console.log('🔍 Fetching chapters:', targetUrl);
+        console.log('🔍 Fetching:', targetUrl);
 
         const response = await fetch(targetUrl);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
         const result = await response.json();
-        console.log('✅ Chapters data:', result);
-        console.log('📚 Total chapters:', result.data?.length || 0);
 
-        if (result.errors) {
-            throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
-        }
+        // 🔥 DEBUG: Tampilin response mentah di console
+        console.log('📡 Raw result:', result);
 
         const chapters = result.data || [];
-        renderChapters(chapters);
+        console.log('📚 Chapters found:', chapters.length);
 
+        renderChapters(chapters);
     } catch (error) {
         console.error('❌ Error:', error);
-        document.getElementById('chapterList').style.display = 'block';
-        document.getElementById('chapterItems').innerHTML = `
-            <p style="color:#e94560;">❌ Failed to load chapters</p>
-            <p style="color:#666; font-size:14px;">${error.message}</p>
-            <button onclick="fetchChapters()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Try Again</button>
-        `;
     }
 }
 
