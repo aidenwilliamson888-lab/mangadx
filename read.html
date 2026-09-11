@@ -293,7 +293,6 @@ async function fetchChapters() {
         params.set('contentRating[]', 'erotica');
         
         // 🔥 HAPUS FILTER BAHASA - biar semua chapter muncul
-        // params.set('translatedLanguage[]', 'en');  // <-- HAPUS INI
 
         const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}/feed?${params.toString()}`)}`;
         console.log('🔍 Fetching chapters:', targetUrl);
