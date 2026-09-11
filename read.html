@@ -36,7 +36,6 @@
 
         .chapter-list { background: #1a1a2e; border-radius: 12px; padding: 20px 24px; border: 1px solid #2a2a4a; margin-bottom: 20px; }
 
-        /* CHAPTER HEADER + FILTER */
         .chapter-header {
             display: flex;
             justify-content: space-between;
@@ -60,7 +59,7 @@
         }
         .lang-filter:hover, .lang-filter:focus { border-color: #e94560; }
 
-        /* 🔥 GROUPED CHAPTER */
+        /* GROUPED CHAPTER */
         .chapter-group {
             margin-bottom: 18px;
             border-left: 3px solid #e94560;
@@ -95,21 +94,26 @@
         .chapter-version .version-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
+
+        /* 🔥 BENDERA ASLI */
         .chapter-version .version-flag {
-            font-size: 20px;
-            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            flex-shrink: 0;
         }
-        .chapter-version .version-lang {
-            font-size: 12px;
-            color: #888;
-            background: #252540;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-weight: 700;
-            text-transform: uppercase;
+        .version-flag-img {
+            width: 24px;
+            height: 16px;
+            object-fit: cover;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            vertical-align: middle;
         }
+
         .chapter-version .version-title {
             font-size: 14px;
             font-weight: 600;
@@ -124,6 +128,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+        .chapter-version .version-lang {
+            font-size: 11px;
+            color: #888;
+            background: #252540;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
         .chapter-version .version-pages {
             font-size: 11px;
@@ -190,19 +203,19 @@
             <h2>📚 Chapters</h2>
             <select id="langFilter" class="lang-filter" onchange="filterByLang()">
                 <option value="">🌐 All Languages</option>
-                <option value="en">🇬🇧 English</option>
-                <option value="id">🇮🇩 Indonesia</option>
-                <option value="es-la">🇲🇽 Spanish (LA)</option>
-                <option value="es">🇪🇸 Spanish</option>
-                <option value="pt-br">🇧🇷 Portuguese (BR)</option>
-                <option value="pt">🇵🇹 Portuguese</option>
-                <option value="vi">🇻🇳 Vietnamese</option>
-                <option value="th">🇹🇭 Thai</option>
-                <option value="ja">🇯🇵 Japanese</option>
-                <option value="ko">🇰🇷 Korean</option>
-                <option value="zh">🇨🇳 Chinese</option>
-                <option value="fr">🇫🇷 French</option>
-                <option value="de">🇩🇪 German</option>
+                <option value="en">English</option>
+                <option value="id">Indonesia</option>
+                <option value="es-la">Spanish (LA)</option>
+                <option value="es">Spanish</option>
+                <option value="pt-br">Portuguese (BR)</option>
+                <option value="pt">Portuguese</option>
+                <option value="vi">Vietnamese</option>
+                <option value="th">Thai</option>
+                <option value="ja">Japanese</option>
+                <option value="ko">Korean</option>
+                <option value="zh">Chinese</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
             </select>
         </div>
         <div id="chapterItems"></div>
@@ -233,13 +246,24 @@
     let allChapters = [];
     let currentLangFilter = '';
 
-    // ====== FLAG BAHASA ======
-    const langFlags = {
-        'en': '🇬🇧', 'id': '🇮🇩', 'es': '🇪🇸', 'es-la': '🇲🇽',
-        'pt': '🇵🇹', 'pt-br': '🇧🇷', 'vi': '🇻🇳', 'ja': '🇯🇵',
-        'ko': '🇰🇷', 'zh': '🇨🇳', 'fr': '🇫🇷', 'de': '🇩🇪',
-        'it': '🇮🇹', 'ru': '🇷🇺', 'ar': '🇸🇦', 'th': '🇹🇭'
+    // 🔥 KODE NEGARA UNTUK FLAGCDN
+    const langCountryCodes = {
+        'en': 'gb', 'id': 'id', 'es': 'es', 'es-la': 'mx',
+        'pt': 'pt', 'pt-br': 'br', 'vi': 'vn', 'ja': 'jp',
+        'ko': 'kr', 'zh': 'cn', 'fr': 'fr', 'de': 'de',
+        'it': 'it', 'ru': 'ru', 'ar': 'sa', 'th': 'th',
+        'tr': 'tr', 'pl': 'pl', 'nl': 'nl', 'sv': 'se',
+        'no': 'no', 'da': 'dk', 'fi': 'fi', 'cs': 'cz',
+        'hu': 'hu', 'ro': 'ro', 'uk': 'ua', 'he': 'il',
+        'fa': 'ir', 'hi': 'in', 'bn': 'bd', 'ms': 'my',
+        'tl': 'ph', 'ca': 'es', 'eu': 'es', 'gl': 'es'
     };
+
+    // 🔥 FUNGSI DAPETIN URL BENDERA
+    function getFlagUrl(langCode) {
+        const countryCode = langCountryCodes[langCode] || 'un';
+        return `https://flagcdn.com/w40/${countryCode}.png`;
+    }
 
     // ====== GET TITLE ======
     function getTitle(manga) {
@@ -304,28 +328,23 @@
         `;
     }
 
-    // ====== RENDER CHAPTERS (GROUPED) ======
+    // ====== RENDER CHAPTERS (GROUPED + BENDERA ASLI) ======
     function renderChapters(chapters) {
         const chapterList = document.getElementById('chapterList');
         const chapterItems = document.getElementById('chapterItems');
 
         allChapters = chapters || [];
 
-        // 🔥 KALO KOSONG
         if (!allChapters || allChapters.length === 0) {
             chapterItems.innerHTML = `
                 <div style="text-align:center; padding:30px 20px;">
                     <p style="color:#888; font-size:16px;">😕 No chapters available</p>
-                    <p style="color:#666; font-size:13px; margin-top:8px;">
-                        This manga doesn't have any chapters uploaded yet.
-                    </p>
                 </div>
             `;
             chapterList.style.display = 'block';
             return;
         }
 
-        // 🔥 FILTER KALO ADA FILTER BAHASA
         let filtered = allChapters;
         if (currentLangFilter) {
             filtered = allChapters.filter(ch =>
@@ -333,14 +352,10 @@
             );
         }
 
-        // 🔥 KALO HASIL FILTER KOSONG
         if (filtered.length === 0) {
             chapterItems.innerHTML = `
                 <div style="text-align:center; padding:30px 20px;">
                     <p style="color:#e94560; font-size:16px;">😕 No chapters in this language</p>
-                    <p style="color:#666; font-size:13px; margin-top:8px;">
-                        Try selecting another language from the dropdown above.
-                    </p>
                     <button onclick="resetLangFilter()" style="margin-top:14px; padding:10px 24px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer; font-size:13px;">🌐 Show All Languages</button>
                 </div>
             `;
@@ -352,13 +367,11 @@
         const grouped = {};
         filtered.forEach(ch => {
             const chNum = ch.attributes?.chapter || '?';
-            if (!grouped[chNum]) {
-                grouped[chNum] = [];
-            }
+            if (!grouped[chNum]) grouped[chNum] = [];
             grouped[chNum].push(ch);
         });
 
-        // 🔥 SORT CHAPTER NUMBER DARI TERBARU
+        // 🔥 SORT CHAPTER DARI TERBARU
         const sortedChapters = Object.keys(grouped).sort((a, b) => {
             const numA = parseFloat(a) || 0;
             const numB = parseFloat(b) || 0;
@@ -370,7 +383,7 @@
         sortedChapters.forEach(chNum => {
             const versions = grouped[chNum];
 
-            // 🔥 SORT VERSI BERDASARKAN BAHASA (English dulu, baru yang lain)
+            // Sort: English first
             versions.sort((a, b) => {
                 const langA = a.attributes?.translatedLanguage || 'zz';
                 const langB = b.attributes?.translatedLanguage || 'zz';
@@ -387,12 +400,14 @@
                 const chTitle = ch.attributes?.title || '';
                 const chPages = ch.attributes?.pages || 0;
                 const chScan = getScanlationGroup(ch);
-                const flag = langFlags[chLang] || '🌐';
+                const flagUrl = getFlagUrl(chLang); // 🔥 BENDERA ASLI
 
                 html += `
                     <div class="chapter-version" onclick="openChapter('${ch.id}', '${chNum}')">
                         <div class="version-left">
-                            <span class="version-flag">${flag}</span>
+                            <span class="version-flag">
+                                <img src="${flagUrl}" alt="${chLang}" class="version-flag-img" loading="lazy" onerror="this.style.display='none'">
+                            </span>
                             <div>
                                 <div class="version-title">Ch. ${chNum}${chTitle ? ' — ' + chTitle : ''}</div>
                                 <div class="version-scan">👥 ${chScan}</div>
@@ -419,7 +434,6 @@
     function filterByLang() {
         const select = document.getElementById('langFilter');
         currentLangFilter = select.value;
-        console.log('🌐 Filter by:', currentLangFilter || 'All');
         renderChapters(allChapters);
     }
 
@@ -432,11 +446,7 @@
 
     // ====== FETCH MANGA INFO ======
     async function fetchMangaInfo() {
-        console.log('🔍 fetchMangaInfo() called');
-        console.log('🔍 mangaId:', mangaId);
-
         if (!mangaId) {
-            console.error('❌ mangaId is empty!');
             document.getElementById('mangaInfo').innerHTML = `
                 <p style="color:#e94560;">❌ No manga ID provided.</p>
                 <button class="btn-back" onclick="window.location.href='index.html'">← Back to Library</button>
@@ -450,19 +460,13 @@
             params.set('includes[]', 'cover_art');
 
             const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}?${params.toString()}`)}`;
-            console.log('🔍 Fetching info:', targetUrl);
-
             const response = await fetch(targetUrl);
-            console.log('📡 Response status:', response.status);
-
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const result = await response.json();
             if (!result.data) throw new Error('Manga not found');
 
             renderMangaInfo(result.data);
-            console.log('✅ Info rendered, now fetching chapters...');
-
             fetchChapters();
 
         } catch (error) {
@@ -470,7 +474,6 @@
             document.getElementById('mangaInfo').innerHTML = `
                 <p style="color:#e94560;">❌ Failed to load manga info</p>
                 <p style="color:#666; font-size:14px;">${error.message}</p>
-                <p style="color:#555; font-size:12px; margin-top:8px;">Manga ID: ${mangaId}</p>
                 <button onclick="fetchMangaInfo()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Try Again</button>
             `;
         }
@@ -501,40 +504,22 @@
         console.error('❌ Error:', error);
     }
 }
-    // ====== OPEN CHAPTER → REDIRECT KE VIEWER ======
+
+    // ====== OPEN CHAPTER ======
     function openChapter(chapterId, chapterNum) {
         window.location.href = `viewer.html?chapter=${chapterId}&manga=${mangaId}&num=${chapterNum}`;
     }
 
     // ====== INITIAL LOAD ======
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 DOM loaded');
-        console.log('🔍 URL:', window.location.href);
-        console.log('🔍 Manga ID:', mangaId);
-
         if (!mangaId) {
-            console.error('❌ No manga ID in URL!');
             document.getElementById('mangaInfo').innerHTML = `
                 <p style="color:#e94560;">❌ No manga ID provided.</p>
-                <p style="color:#666; font-size:13px;">URL harus punya parameter <code>?id=...</code></p>
                 <button class="btn-back" onclick="window.location.href='index.html'">← Back to Library</button>
             `;
             return;
         }
-
         fetchMangaInfo();
-    });
-
-    // ====== FALLBACK ======
-    window.addEventListener('load', function() {
-        console.log('🚀 Window fully loaded');
-        setTimeout(function() {
-            var info = document.getElementById('mangaInfo');
-            if (info && info.innerHTML.includes('Loading manga info')) {
-                console.warn('⚠️ Still loading after 3s, retrying...');
-                fetchMangaInfo();
-            }
-        }, 3000);
     });
 </script>
 
