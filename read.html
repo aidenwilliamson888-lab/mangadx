@@ -206,41 +206,53 @@
         chapterList.style.display = 'block';
     }
 
-    // ====== FETCH MANGA INFO ======
-    async function fetchMangaInfo() {
-        if (!mangaId) {
-            document.getElementById('mangaInfo').innerHTML = `
-                <p style="color:#e94560;">❌ No manga ID provided.</p>
-                <button class="btn-back" onclick="window.location.href='index.html'">← Back to Library</button>
-            `;
-            return;
-        }
-
-        try {
-            const params = new URLSearchParams();
-            params.set('includes[]', 'author');
-            params.set('includes[]', 'cover_art');
-
-            const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}?${params.toString()}`)}`;
-            console.log('🔍 Fetching info:', targetUrl);
-
-            const response = await fetch(targetUrl);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            const result = await response.json();
-            if (!result.data) throw new Error('Manga not found');
-
-            renderMangaInfo(result.data);
-            fetchChapters();
-
-        } catch (error) {
-            console.error('❌ Error:', error);
-            document.getElementById('mangaInfo').innerHTML = `
-                <p style="color:#e94560;">❌ Failed to load manga info</p>
-                <p style="color:#666; font-size:14px;">${error.message}</p>
-            `;
-        }
+   // ====== FETCH MANGA INFO ======
+async function fetchMangaInfo() {
+    console.log('🔍 fetchMangaInfo() called');
+    console.log('🔍 mangaId:', mangaId);
+    
+    if (!mangaId) {
+        console.error('❌ mangaId is empty!');
+        document.getElementById('mangaInfo').innerHTML = `
+            <p style="color:#e94560;">❌ No manga ID provided.</p>
+            <button class="btn-back" onclick="window.location.href='index.html'">← Back to Library</button>
+        `;
+        return;
     }
+
+    try {
+        const params = new URLSearchParams();
+        params.set('includes[]', 'author');
+        params.set('includes[]', 'cover_art');
+
+        const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}?${params.toString()}`)}`;
+        console.log('🔍 Fetching info:', targetUrl);
+
+        const response = await fetch(targetUrl);
+        console.log('📡 Response status:', response.status);
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const result = await response.json();
+        console.log('✅ Result:', result);
+
+        if (!result.data) throw new Error('Manga not found');
+
+        renderMangaInfo(result.data);
+        console.log('✅ Info rendered, now fetching chapters...');
+        
+        fetchChapters();
+
+    } catch (error) {
+        console.error('❌ Error:', error);
+        document.getElementById('mangaInfo').innerHTML = `
+            <p style="color:#e94560;">❌ Failed to load manga info</p>
+            <p style="color:#666; font-size:14px;">${error.message}</p>
+            <p style="color:#555; font-size:12px; margin-top:8px;">Manga ID: ${mangaId}</p>
+            <button onclick="fetchMangaInfo()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Try Again</button>
+        `;
+    }
+}
 
     // ====== FETCH CHAPTERS ======
     async function fetchChapters() {
@@ -278,9 +290,39 @@ function openChapter(chapterId, chapterNum) {
     window.location.href = `viewer.html?chapter=${chapterId}&manga=${mangaId}&num=${chapterNum}`;
 }
     // ====== INITIAL LOAD ======
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchMangaInfo();
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // 🔥 TAMPILIN LOG BUAT DEBUG
+    console.log('🚀 DOM loaded');
+    console.log('🔍 URL:', window.location.href);
+    console.log('🔍 Manga ID:', mangaId);
+    
+    // 🔥 CEK APAKAH mangaId ADA
+    if (!mangaId) {
+        console.error('❌ No manga ID in URL!');
+        document.getElementById('mangaInfo').innerHTML = `
+            <p style="color:#e94560;">❌ No manga ID provided.</p>
+            <p style="color:#666; font-size:13px;">URL harus punya parameter <code>?id=...</code></p>
+            <button class="btn-back" onclick="window.location.href='index.html'">← Back to Library</button>
+        `;
+        return;
+    }
+    
+    // 🔥 JALANIN FETCH
+    fetchMangaInfo();
+});
+
+// 🔥 FALLBACK: Kalo DOMContentLoaded gak jalan (edge case)
+window.addEventListener('load', function() {
+    console.log('🚀 Window fully loaded');
+    // Kalo mangaInfo masih loading setelah 3 detik, coba fetch lagi
+    setTimeout(function() {
+        var info = document.getElementById('mangaInfo');
+        if (info && info.innerHTML.includes('Loading manga info')) {
+            console.warn('⚠️ Still loading after 3s, retrying...');
+            fetchMangaInfo();
+        }
+    }, 3000);
+});
 </script>
 
 </body>
