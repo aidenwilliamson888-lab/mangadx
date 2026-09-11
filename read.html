@@ -187,21 +187,21 @@
         }
 
         chapterItems.innerHTML = chapters.map(ch => {
-            const chNum = ch.attributes?.chapter || '?';
-            const chTitle = ch.attributes?.title || `Chapter ${chNum}`;
-            const chLang = ch.attributes?.translatedLanguage || 'en';
-            const chPages = ch.attributes?.pages || 0;
+    const chNum = ch.attributes?.chapter || '?';
+    const chTitle = ch.attributes?.title || `Chapter ${chNum}`;
+    const chLang = ch.attributes?.translatedLanguage || 'en';
+    const chPages = ch.attributes?.pages || 0;
 
-            return `
-                <div class="chapter-item" onclick="openChapter('${ch.id}')">
-                    <div>
-                        <div class="ch-title">📖 Ch. ${chNum} — ${chTitle}</div>
-                        <div class="ch-meta">🌐 ${chLang.toUpperCase()} · ${chPages} pages</div>
-                    </div>
-                    <div class="ch-arrow">▶</div>
-                </div>
-            `;
-        }).join('');
+    return `
+        <div class="chapter-item" onclick="openChapter('${ch.id}', '${chNum}')">
+            <div>
+                <div class="ch-title">📖 Ch. ${chNum} — ${chTitle}</div>
+                <div class="ch-meta">🌐 ${chLang.toUpperCase()} · ${chPages} pages</div>
+            </div>
+            <div class="ch-arrow">▶</div>
+        </div>
+    `;
+}).join('');
 
         chapterList.style.display = 'block';
     }
@@ -273,13 +273,10 @@
         }
     }
 
-    // ====== OPEN CHAPTER ======
-    function openChapter(chapterId) {
-        // 🔥 Ganti dengan link fake reader lo
-        alert(`📖 Open chapter: ${chapterId}\n\nReplace this function with your reader link!`);
-        // window.location.href = `viewer.html?chapter=${chapterId}`;
-    }
-
+    // ====== OPEN CHAPTER → REDIRECT KE VIEWER ======
+function openChapter(chapterId, chapterNum) {
+    window.location.href = `viewer.html?chapter=${chapterId}&manga=${mangaId}&num=${chapterNum}`;
+}
     // ====== INITIAL LOAD ======
     document.addEventListener('DOMContentLoaded', () => {
         fetchMangaInfo();
