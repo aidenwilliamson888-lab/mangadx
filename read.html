@@ -176,35 +176,60 @@
     }
 
     // ====== RENDER CHAPTERS ======
-    function renderChapters(chapters) {
-        const chapterList = document.getElementById('chapterList');
-        const chapterItems = document.getElementById('chapterItems');
+function renderChapters(chapters) {
+    const chapterList = document.getElementById('chapterList');
+    const chapterItems = document.getElementById('chapterItems');
 
-        if (!chapters || chapters.length === 0) {
-            chapterItems.innerHTML = `<p style="color:#888; padding:20px 0;">No chapters available.</p>`;
-            chapterList.style.display = 'block';
-            return;
-        }
-
-        chapterItems.innerHTML = chapters.map(ch => {
-    const chNum = ch.attributes?.chapter || '?';
-    const chTitle = ch.attributes?.title || `Chapter ${chNum}`;
-    const chLang = ch.attributes?.translatedLanguage || 'en';
-    const chPages = ch.attributes?.pages || 0;
-
-    return `
-        <div class="chapter-item" onclick="openChapter('${ch.id}', '${chNum}')">
-            <div>
-                <div class="ch-title">📖 Ch. ${chNum} — ${chTitle}</div>
-                <div class="ch-meta">🌐 ${chLang.toUpperCase()} · ${chPages} pages</div>
+    if (!chapters || chapters.length === 0) {
+        chapterItems.innerHTML = `
+            <div style="text-align:center; padding:30px 20px;">
+                <p style="color:#888; font-size:16px;">😕 No chapters available</p>
+                <p style="color:#666; font-size:13px; margin-top:8px;">
+                    This manga doesn't have any chapters uploaded yet.
+                </p>
             </div>
-            <div class="ch-arrow">▶</div>
-        </div>
-    `;
-}).join('');
-
+        `;
         chapterList.style.display = 'block';
+        return;
     }
+
+    // 🔥 SORT CHAPTER DARI YANG TERBARU
+    chapters.sort((a, b) => {
+        const chA = parseFloat(a.attributes?.chapter) || 0;
+        const chB = parseFloat(b.attributes?.chapter) || 0;
+        return chB - chA;
+    });
+
+    chapterItems.innerHTML = chapters.map(ch => {
+        const chNum = ch.attributes?.chapter || '?';
+        const chTitle = ch.attributes?.title || `Chapter ${chNum}`;
+        const chLang = ch.attributes?.translatedLanguage || 'en';
+        const chPages = ch.attributes?.pages || 0;
+        const chDate = ch.attributes?.publishAt ? new Date(ch.attributes.publishAt).toLocaleDateString() : '';
+
+        // 🔥 FLAG BAHASA
+        const langFlags = {
+            'en': '🇬🇧', 'id': '🇮🇩', 'es': '🇪🇸', 'es-la': '🇲🇽',
+            'pt': '🇵🇹', 'pt-br': '🇧🇷', 'vi': '🇻🇳', 'ja': '🇯🇵',
+            'ko': '🇰🇷', 'zh': '🇨🇳', 'fr': '🇫🇷', 'de': '🇩🇪',
+            'it': '🇮🇹', 'ru': '🇷🇺', 'ar': '🇸🇦', 'th': '🇹🇭'
+        };
+        const flag = langFlags[chLang] || '🌐';
+
+        return `
+            <div class="chapter-item" onclick="openChapter('${ch.id}', '${chNum}')">
+                <div>
+                    <div class="ch-title">📖 Ch. ${chNum} — ${chTitle}</div>
+                    <div class="ch-meta">${flag} ${chLang.toUpperCase()} · 📄 ${chPages} pages ${chDate ? '· 📅 ' + chDate : ''}</div>
+                </div>
+                <div class="ch-arrow">▶</div>
+            </div>
+        `;
+    }).join('');
+
+    chapterList.style.display = 'block';
+    console.log('✅ Rendered', chapters.length, 'chapters');
+}
 
    // ====== FETCH MANGA INFO ======
 async function fetchMangaInfo() {
@@ -255,35 +280,48 @@ async function fetchMangaInfo() {
 }
 
     // ====== FETCH CHAPTERS ======
-    async function fetchChapters() {
-        try {
-            const params = new URLSearchParams();
-            params.set('limit', '100');
-            params.set('order[chapter]', 'desc');
-            params.set('contentRating[]', 'safe');
-            params.set('contentRating[]', 'suggestive');
-            params.set('translatedLanguage[]', 'en');
+async function fetchChapters() {
+    try {
+        // 🔥 PARAMETER YANG BENER
+        const params = new URLSearchParams();
+        params.set('limit', '500');           // Max chapter
+        params.set('offset', '0');
+        params.set('order[chapter]', 'desc');
+        params.set('order[volume]', 'desc');
+        params.set('contentRating[]', 'safe');
+        params.set('contentRating[]', 'suggestive');
+        params.set('contentRating[]', 'erotica');
+        
+        // 🔥 HAPUS FILTER BAHASA - biar semua chapter muncul
+        // params.set('translatedLanguage[]', 'en');  // <-- HAPUS INI
 
-            const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}/feed?${params.toString()}`)}`;
-            console.log('🔍 Fetching chapters:', targetUrl);
+        const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}/feed?${params.toString()}`)}`;
+        console.log('🔍 Fetching chapters:', targetUrl);
 
-            const response = await fetch(targetUrl);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(targetUrl);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            const result = await response.json();
-            const chapters = result.data || [];
+        const result = await response.json();
+        console.log('✅ Chapters data:', result);
+        console.log('📚 Total chapters:', result.data?.length || 0);
 
-            renderChapters(chapters);
-
-        } catch (error) {
-            console.error('❌ Error:', error);
-            document.getElementById('chapterList').style.display = 'block';
-            document.getElementById('chapterItems').innerHTML = `
-                <p style="color:#e94560;">❌ Failed to load chapters</p>
-                <p style="color:#666; font-size:14px;">${error.message}</p>
-            `;
+        if (result.errors) {
+            throw new Error(`MangaDex: ${result.errors[0]?.title || 'Unknown error'}`);
         }
+
+        const chapters = result.data || [];
+        renderChapters(chapters);
+
+    } catch (error) {
+        console.error('❌ Error:', error);
+        document.getElementById('chapterList').style.display = 'block';
+        document.getElementById('chapterItems').innerHTML = `
+            <p style="color:#e94560;">❌ Failed to load chapters</p>
+            <p style="color:#666; font-size:14px;">${error.message}</p>
+            <button onclick="fetchChapters()" style="margin-top:14px; padding:10px 30px; background:#e94560; color:#fff; border:none; border-radius:30px; font-weight:700; cursor:pointer;">🔄 Try Again</button>
+        `;
     }
+}
 
     // ====== OPEN CHAPTER → REDIRECT KE VIEWER ======
 function openChapter(chapterId, chapterNum) {
