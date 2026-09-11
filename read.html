@@ -28,17 +28,15 @@
 
         .container { max-width: 900px; margin: 0 auto; padding: 20px 15px 60px; }
 
-        /* MANGA INFO */
         .manga-info { background: #1a1a2e; border-radius: 12px; padding: 24px; margin-bottom: 20px; border: 1px solid #2a2a4a; }
         .manga-info h1 { font-size: 24px; font-weight: 800; margin-bottom: 12px; color: #fff; }
         .manga-info .desc { font-size: 14px; color: #aaa; line-height: 1.7; margin-bottom: 16px; }
         .manga-info .meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: #888; }
         .manga-info .meta span { background: #252540; padding: 4px 14px; border-radius: 12px; }
 
-        /* CHAPTER LIST */
         .chapter-list { background: #1a1a2e; border-radius: 12px; padding: 20px 24px; border: 1px solid #2a2a4a; margin-bottom: 20px; }
 
-        /* 🔥 CHAPTER HEADER + FILTER */
+        /* CHAPTER HEADER + FILTER */
         .chapter-header {
             display: flex;
             justify-content: space-between;
@@ -62,11 +60,79 @@
         }
         .lang-filter:hover, .lang-filter:focus { border-color: #e94560; }
 
-        .chapter-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-radius: 8px; background: #12121f; margin-bottom: 8px; cursor: pointer; transition: all 0.3s; border: 1px solid transparent; }
-        .chapter-item:hover { background: #252540; border-color: #e94560; }
-        .chapter-item .ch-title { font-size: 15px; font-weight: 600; color: #fff; }
-        .chapter-item .ch-meta { font-size: 12px; color: #666; }
-        .chapter-item .ch-arrow { color: #e94560; font-size: 18px; }
+        /* 🔥 GROUPED CHAPTER */
+        .chapter-group {
+            margin-bottom: 18px;
+            border-left: 3px solid #e94560;
+            padding-left: 14px;
+        }
+        .chapter-group-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #e94560;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+        .chapter-version {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #12121f;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .chapter-version:hover {
+            background: #252540;
+            border-color: #e94560;
+            transform: translateX(4px);
+        }
+        .chapter-version .version-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chapter-version .version-flag {
+            font-size: 20px;
+            line-height: 1;
+        }
+        .chapter-version .version-lang {
+            font-size: 12px;
+            color: #888;
+            background: #252540;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .chapter-version .version-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .chapter-version .version-scan {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .chapter-version .version-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chapter-version .version-pages {
+            font-size: 11px;
+            color: #666;
+        }
+        .chapter-version .version-arrow {
+            color: #e94560;
+            font-size: 16px;
+        }
 
         .ads-inarticle { background: #1a1a2e; padding: 18px 10px; margin: 22px 0; text-align: center; border-radius: 10px; border: 1px solid #2a2a4a; min-height: 90px; }
 
@@ -84,8 +150,8 @@
         @media (max-width: 768px) {
             .manga-info h1 { font-size: 18px; }
             .manga-info .desc { font-size: 13px; }
-            .chapter-item { padding: 12px 14px; }
-            .chapter-item .ch-title { font-size: 13px; }
+            .chapter-version { padding: 10px 12px; }
+            .chapter-version .version-title { font-size: 13px; }
             .chapter-header { flex-direction: column; align-items: stretch; }
             .lang-filter { width: 100%; }
         }
@@ -119,7 +185,6 @@
         <div class="loading"><div class="spinner"></div><p>Loading manga info...</p></div>
     </div>
 
-    <!-- 🔥 CHAPTER LIST DENGAN FILTER -->
     <div id="chapterList" class="chapter-list" style="display:none;">
         <div class="chapter-header">
             <h2>📚 Chapters</h2>
@@ -165,8 +230,16 @@
     const mangaTitle = urlParams.get('title') ? decodeURIComponent(urlParams.get('title')) : '';
 
     // ====== GLOBAL VARIABLES ======
-    let allChapters = [];        // 🔥 Simpan semua chapter
-    let currentLangFilter = '';  // 🔥 Filter bahasa aktif
+    let allChapters = [];
+    let currentLangFilter = '';
+
+    // ====== FLAG BAHASA ======
+    const langFlags = {
+        'en': '🇬🇧', 'id': '🇮🇩', 'es': '🇪🇸', 'es-la': '🇲🇽',
+        'pt': '🇵🇹', 'pt-br': '🇧🇷', 'vi': '🇻🇳', 'ja': '🇯🇵',
+        'ko': '🇰🇷', 'zh': '🇨🇳', 'fr': '🇫🇷', 'de': '🇩🇪',
+        'it': '🇮🇹', 'ru': '🇷🇺', 'ar': '🇸🇦', 'th': '🇹🇭'
+    };
 
     // ====== GET TITLE ======
     function getTitle(manga) {
@@ -199,6 +272,13 @@
         return map[status] || status;
     }
 
+    // ====== GET SCANLATION GROUP ======
+    function getScanlationGroup(chapter) {
+        const groupRel = chapter.relationships?.find(r => r.type === 'scanlation_group');
+        if (!groupRel) return 'Unknown';
+        return groupRel.attributes?.name || 'Unknown';
+    }
+
     // ====== RENDER MANGA INFO ======
     function renderMangaInfo(manga) {
         const info = document.getElementById('mangaInfo');
@@ -224,20 +304,11 @@
         `;
     }
 
-    // ====== FLAG BAHASA ======
-    const langFlags = {
-        'en': '🇬🇧', 'id': '🇮🇩', 'es': '🇪🇸', 'es-la': '🇲🇽',
-        'pt': '🇵🇹', 'pt-br': '🇧🇷', 'vi': '🇻🇳', 'ja': '🇯🇵',
-        'ko': '🇰🇷', 'zh': '🇨🇳', 'fr': '🇫🇷', 'de': '🇩🇪',
-        'it': '🇮🇹', 'ru': '🇷🇺', 'ar': '🇸🇦', 'th': '🇹🇭'
-    };
-
-    // ====== RENDER CHAPTERS (DENGAN FILTER) ======
+    // ====== RENDER CHAPTERS (GROUPED) ======
     function renderChapters(chapters) {
         const chapterList = document.getElementById('chapterList');
         const chapterItems = document.getElementById('chapterItems');
 
-        // 🔥 SIMPAN SEMUA CHAPTER
         allChapters = chapters || [];
 
         // 🔥 KALO KOSONG
@@ -253,13 +324,6 @@
             chapterList.style.display = 'block';
             return;
         }
-
-        // 🔥 SORT DARI TERBARU
-        allChapters.sort((a, b) => {
-            const chA = parseFloat(a.attributes?.chapter) || 0;
-            const chB = parseFloat(b.attributes?.chapter) || 0;
-            return chB - chA;
-        });
 
         // 🔥 FILTER KALO ADA FILTER BAHASA
         let filtered = allChapters;
@@ -284,28 +348,71 @@
             return;
         }
 
-        // 🔥 RENDER
-        chapterItems.innerHTML = filtered.map(ch => {
+        // 🔥 GROUP BY CHAPTER NUMBER
+        const grouped = {};
+        filtered.forEach(ch => {
             const chNum = ch.attributes?.chapter || '?';
-            const chTitle = ch.attributes?.title || `Chapter ${chNum}`;
-            const chLang = ch.attributes?.translatedLanguage || 'en';
-            const chPages = ch.attributes?.pages || 0;
-            const chDate = ch.attributes?.publishAt ? new Date(ch.attributes.publishAt).toLocaleDateString() : '';
-            const flag = langFlags[chLang] || '🌐';
+            if (!grouped[chNum]) {
+                grouped[chNum] = [];
+            }
+            grouped[chNum].push(ch);
+        });
 
-            return `
-                <div class="chapter-item" onclick="openChapter('${ch.id}', '${chNum}')">
-                    <div>
-                        <div class="ch-title">📖 Ch. ${chNum} — ${chTitle}</div>
-                        <div class="ch-meta">${flag} ${chLang.toUpperCase()} · 📄 ${chPages} pages ${chDate ? '· 📅 ' + chDate : ''}</div>
+        // 🔥 SORT CHAPTER NUMBER DARI TERBARU
+        const sortedChapters = Object.keys(grouped).sort((a, b) => {
+            const numA = parseFloat(a) || 0;
+            const numB = parseFloat(b) || 0;
+            return numB - numA;
+        });
+
+        // 🔥 RENDER
+        let html = '';
+        sortedChapters.forEach(chNum => {
+            const versions = grouped[chNum];
+
+            // 🔥 SORT VERSI BERDASARKAN BAHASA (English dulu, baru yang lain)
+            versions.sort((a, b) => {
+                const langA = a.attributes?.translatedLanguage || 'zz';
+                const langB = b.attributes?.translatedLanguage || 'zz';
+                if (langA === 'en') return -1;
+                if (langB === 'en') return 1;
+                return langA.localeCompare(langB);
+            });
+
+            html += `<div class="chapter-group">`;
+            html += `<div class="chapter-group-title">Chapter ${chNum}</div>`;
+
+            versions.forEach(ch => {
+                const chLang = ch.attributes?.translatedLanguage || 'en';
+                const chTitle = ch.attributes?.title || '';
+                const chPages = ch.attributes?.pages || 0;
+                const chScan = getScanlationGroup(ch);
+                const flag = langFlags[chLang] || '🌐';
+
+                html += `
+                    <div class="chapter-version" onclick="openChapter('${ch.id}', '${chNum}')">
+                        <div class="version-left">
+                            <span class="version-flag">${flag}</span>
+                            <div>
+                                <div class="version-title">Ch. ${chNum}${chTitle ? ' — ' + chTitle : ''}</div>
+                                <div class="version-scan">👥 ${chScan}</div>
+                            </div>
+                        </div>
+                        <div class="version-right">
+                            <span class="version-lang">${chLang.toUpperCase()}</span>
+                            <span class="version-pages">📄 ${chPages}p</span>
+                            <span class="version-arrow">▶</span>
+                        </div>
                     </div>
-                    <div class="ch-arrow">▶</div>
-                </div>
-            `;
-        }).join('');
+                `;
+            });
 
+            html += `</div>`;
+        });
+
+        chapterItems.innerHTML = html;
         chapterList.style.display = 'block';
-        console.log('✅ Rendered', filtered.length, 'of', allChapters.length, 'chapters');
+        console.log('✅ Rendered', filtered.length, 'chapters in', sortedChapters.length, 'groups');
     }
 
     // ====== FILTER BY LANGUAGE ======
@@ -351,8 +458,6 @@
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const result = await response.json();
-            console.log('✅ Result:', result);
-
             if (!result.data) throw new Error('Manga not found');
 
             renderMangaInfo(result.data);
@@ -396,7 +501,6 @@
         console.error('❌ Error:', error);
     }
 }
-
     // ====== OPEN CHAPTER → REDIRECT KE VIEWER ======
     function openChapter(chapterId, chapterNum) {
         window.location.href = `viewer.html?chapter=${chapterId}&manga=${mangaId}&num=${chapterNum}`;
