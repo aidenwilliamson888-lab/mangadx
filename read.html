@@ -245,20 +245,20 @@
     // ====== FETCH CHAPTERS ======
 async function fetchChapters() {
     try {
-        // 🔥 PARAMETER YANG BENER
         const params = new URLSearchParams();
-        params.set('limit', '500');           // Max chapter
+        params.set('limit', '500');
         params.set('offset', '0');
         params.set('order[chapter]', 'desc');
         params.set('order[volume]', 'desc');
         params.set('contentRating[]', 'safe');
         params.set('contentRating[]', 'suggestive');
         params.set('contentRating[]', 'erotica');
-        params.set('includes[]', 'scanlation_group');
-        params.set('includes[]', 'user');
         
-        // 🔥 JANGAN FILTER BAHASA DULU - biar keliatan semua chapter
+        // 🔥 HAPUS BARIS INI ATAU GANTI BAHASA
         // params.set('translatedLanguage[]', 'en');
+        
+        // 🔥 ATAU PAKE BAHASA YANG BENERAN ADA
+        // params.set('translatedLanguage[]', 'ca'); // Katalan
 
         const targetUrl = `${WORKER_URL}/${encodeURIComponent(`${MANGADEX_API}/manga/${mangaId}/feed?${params.toString()}`)}`;
         console.log('🔍 Fetching chapters:', targetUrl);
